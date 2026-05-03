@@ -1,14 +1,14 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const ARCHIVE_DIR = path.join(process.cwd(), "Archive Gallery");
+const GALLERY_DIR = path.join(process.cwd(), "public", "gallery");
 
 const IMAGE_EXT = /\.(jpe?g|png|gif|webp)$/i;
 
 export function getGalleryImageNames(): string[] {
-  if (!fs.existsSync(ARCHIVE_DIR)) return [];
+  if (!fs.existsSync(GALLERY_DIR)) return [];
   return fs
-    .readdirSync(ARCHIVE_DIR)
+    .readdirSync(GALLERY_DIR)
     .filter((f) => IMAGE_EXT.test(f))
     .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 }
