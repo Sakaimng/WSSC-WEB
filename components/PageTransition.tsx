@@ -1,0 +1,106 @@
+"use client";
+
+import gsap from "gsap";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
+import type { ReactNode } from "react";
+import {
+  PageTransitionContext,
+} from "@/components/page-transition-context";
+import { SiteNav } from "@/components/SiteNav";
+
+const FADE_OUT = { duration: 0.28, ease: "power2.in" as const };
+const FADE_IN = { duration: 0.4, ease: "power2.out" as const };
+
+type Props = {
+  children: ReactNode;
+};
+
+/**
+ * Provider wraps nav + main so `TransitionLink` in the nav receives `startNavigate`.
+ * Only the main column fades; the nav stays visually fixed.
+ */
+export function PageTransition({ children }: Props) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const expectFadeInRef = useRef(false);
+  const navGenRef = useRef(0);
+  const prevPathnameRef = useRef<string | null>(null);
+
+  const startNavigate = useCallback(
+    (href: string) => {
+      const el = wrapRef.current;
+      if (!el) {
+        router.push(href);
+        return;
+      }
+
+      navGenRef.current += 1;
+      const gen = navGenRef.current;
+      expectFadeInRef.current = true;
+
+      gsap.killTweensOf(el);
+
+      gsap.to(el, {
+        autoAlpha: 0,
+        ...FADE_OUT,
+        onComplete: () => {
+          if (gen !== navGenRef.current) return;
+          router.push(href);
+        },
+      });
+    },
+    [router],
+  );
+
+  const api = useMemo(
+    () => ({
+      startNavigate,
+    }),
+    [startNavigate],
+  );
+
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+
+    if (prevPathnameRef.current === null) {
+      prevPathnameRef.current = pathname;
+      gsap.set(el, { autoAlpha: 1 });
+      return;
+    }
+
+    if (prevPathnameRef.current === pathname) return;
+
+    prevPathnameRef.current = pathname;
+
+    gsap.killTweensOf(el);
+
+    if (expectFadeInRef.current) {
+      expectFadeInRef.current = false;
+      gsap.fromTo(el, { autoAlpha: 0 }, { autoAlpha: 1, ...FADE_IN });
+    } else {
+      gsap.set(el, { autoAlpha: 1 });
+    }
+  }, [pathname]);
+
+  return (
+    <PageTransitionContext.Provider value={api}>
+      <SiteNav />
+      <main className="flex flex-1 flex-col bg-black pt-16 sm:pt-20">
+        <div
+          ref={wrapRef}
+          className="flex min-h-0 flex-1 flex-col"
+        >
+          {children}
+        </div>
+      </main>
+    </PageTransitionContext.Provider>
+  );
+}
