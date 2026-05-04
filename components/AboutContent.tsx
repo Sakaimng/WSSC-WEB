@@ -1,6 +1,7 @@
 "use client";
 
 import gsap from "gsap";
+import Image from "next/image";
 import { useLayoutEffect, useRef } from "react";
 
 export function AboutContent() {
@@ -43,10 +44,17 @@ export function AboutContent() {
         <div className="mt-12 space-y-6">
           <article className="about-reveal flex flex-col gap-6 rounded-2xl border border-white/10 bg-white/[0.03] p-6 opacity-0 sm:p-8 md:flex-row md:items-center">
             <div
-              className="flex aspect-square w-full shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-neutral-900 text-sm font-semibold uppercase tracking-[0.22em] text-neutral-600 md:w-56 lg:w-72"
-              aria-label="Founder profile image placeholder"
+              className="relative aspect-square w-full shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-neutral-900 md:w-56 lg:w-72"
+              aria-label="Founder profile image"
             >
-              Photo
+              <Image
+                src="/PROFILE/FOUNDER.jpg"
+                alt="Founder profile"
+                fill
+                className="object-cover grayscale"
+                sizes="(max-width: 768px) 96vw, (max-width: 1024px) 224px, 288px"
+                quality={85}
+              />
             </div>
             <div className="max-w-3xl">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-neutral-500">
@@ -66,10 +74,17 @@ export function AboutContent() {
 
           <article className="about-reveal flex flex-col gap-6 rounded-2xl border border-white/10 bg-white/[0.03] p-6 opacity-0 sm:p-8 md:flex-row md:items-center">
             <div
-              className="flex aspect-square w-full shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-neutral-900 text-sm font-semibold uppercase tracking-[0.22em] text-neutral-600 md:w-56 lg:w-72"
-              aria-label="Creative director profile image placeholder"
+              className="relative aspect-square w-full shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-neutral-900 md:w-56 lg:w-72"
+              aria-label="Creative director profile image"
             >
-              Photo
+              <Image
+                src="/PROFILE/CREATIVE%20DIRECTOR.jpg"
+                alt="Creative director profile"
+                fill
+                className="object-cover grayscale"
+                sizes="(max-width: 768px) 96vw, (max-width: 1024px) 224px, 288px"
+                quality={85}
+              />
             </div>
             <div className="max-w-3xl">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-neutral-500">
