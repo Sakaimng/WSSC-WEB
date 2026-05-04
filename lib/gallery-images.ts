@@ -5,10 +5,23 @@ const GALLERY_DIR = path.join(process.cwd(), "public", "gallery");
 
 const IMAGE_EXT = /\.(jpe?g|png|gif|webp)$/i;
 
-export function getGalleryImageNames(): string[] {
+export type GalleryImage = {
+  name: string;
+  src: string;
+};
+
+function sortImages(a: GalleryImage, b: GalleryImage) {
+  return a.name.localeCompare(b.name, undefined, { numeric: true });
+}
+
+export function getGalleryImages(): GalleryImage[] {
   if (!fs.existsSync(GALLERY_DIR)) return [];
   return fs
     .readdirSync(GALLERY_DIR)
     .filter((f) => IMAGE_EXT.test(f))
-    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+    .map((name) => ({
+      name,
+      src: `/gallery/${encodeURIComponent(name)}`,
+    }))
+    .sort(sortImages);
 }

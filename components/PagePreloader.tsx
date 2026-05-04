@@ -7,8 +7,8 @@ import { PRELOADER_VIEW_W } from "@/lib/preloader-logo-paths";
 
 const INTRO_INNER = { y: 36, opacity: 0 };
 const INTRO_SVG = { y: 8, opacity: 0.25, filter: "blur(12px)", scale: 0.94 };
-const HOLD_AFTER_FILL_S = 0.5;
-const WIPE_DURATION_S = 0.85;
+const HOLD_AFTER_FILL_S = 0.3;
+const WIPE_DURATION_S = 0.48;
 const OVERLAY_FADE_DURATION_S = 1.15;
 export const PAGE_PRELOADER_DONE_EVENT = "wssc:page-preloader-done";
 

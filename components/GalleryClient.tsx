@@ -1,54 +1,20 @@
 "use client";
 
 import Image from "next/image";
-import {
-  useCallback,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
+import type { GalleryImage } from "@/lib/gallery-images";
 
 type Props = {
-  filenames: string[];
+  images: GalleryImage[];
 };
 
-function galleryPath(file: string) {
-  return `/gallery/${encodeURIComponent(file)}`;
-}
-
-export function GalleryClient({ filenames }: Props) {
+export function GalleryClient({ images }: Props) {
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [mainSrc, setMainSrc] = useState("");
-  const [, setBlobTick] = useState(0);
   const titleId = useId();
-  const blobByFile = useRef<Map<string, string>>(new Map());
   const thumbRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const n = filenames.length;
-
-  const bumpBlobs = useCallback(() => setBlobTick((t) => t + 1), []);
-
-  const loadBlob = useCallback(
-    (file: string) => {
-      if (blobByFile.current.has(file)) return Promise.resolve();
-      const path = galleryPath(file);
-      return fetch(path)
-        .then((r) => {
-          if (!r.ok) throw new Error(r.statusText);
-          return r.blob();
-        })
-        .then((blob) => {
-          const url = URL.createObjectURL(blob);
-          blobByFile.current.set(file, url);
-          bumpBlobs();
-        })
-        .catch(() => {
-          /* keep fallback public URL */
-        });
-    },
-    [bumpBlobs],
-  );
+  const n = images.length;
+  const activeImage = images[activeIndex];
 
   const goPrev = useCallback(() => {
     setActiveIndex((i) => (i - 1 + n) % n);
@@ -81,44 +47,19 @@ export function GalleryClient({ filenames }: Props) {
   }, [open]);
 
   useEffect(() => {
-    if (!open) {
-      blobByFile.current.forEach((url) => URL.revokeObjectURL(url));
-      blobByFile.current.clear();
-      setMainSrc("");
-      return;
-    }
+    if (!open) return;
 
-    const file = filenames[activeIndex];
-    const publicUrl = galleryPath(file);
-    const cached = blobByFile.current.get(file);
-    if (cached) {
-      setMainSrc(cached);
-    } else {
-      setMainSrc(publicUrl);
-    }
-
-    let cancelled = false;
-
-    void loadBlob(file).then(() => {
-      if (cancelled || !open) return;
-      const u = blobByFile.current.get(file);
-      if (u) setMainSrc(u);
-    });
-
-    const pre = [
+    [
       (activeIndex - 1 + n) % n,
       (activeIndex + 1) % n,
       (activeIndex - 2 + n) % n,
       (activeIndex + 2) % n,
-    ];
-    pre.forEach((idx) => {
-      void loadBlob(filenames[idx]);
+    ].forEach((idx) => {
+      const img = new window.Image();
+      img.decoding = "async";
+      img.src = images[idx].src;
     });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [open, activeIndex, filenames, loadBlob, n]);
+  }, [open, activeIndex, images, n]);
 
   useEffect(() => {
     if (!open) return;
@@ -130,16 +71,13 @@ export function GalleryClient({ filenames }: Props) {
     });
   }, [activeIndex, open]);
 
-  if (n === 0) return null;
-
-  const thumbSrc = (file: string) =>
-    blobByFile.current.get(file) ?? galleryPath(file);
+  if (n === 0 || !activeImage) return null;
 
   return (
     <>
       <ul className="grid grid-cols-2 gap-3 lg:grid-cols-3">
-        {filenames.map((file, index) => (
-          <li key={file}>
+        {images.map((image, index) => (
+          <li key={image.src}>
             <button
               type="button"
               onClick={() => {
@@ -151,12 +89,13 @@ export function GalleryClient({ filenames }: Props) {
             >
               <span className="relative block aspect-[4/3] w-full">
                 <Image
-                  src={galleryPath(file)}
+                  src={image.src}
                   alt=""
                   fill
                   className="object-cover transition duration-300 group-hover:brightness-110"
                   sizes="(max-width: 1024px) 50vw, 33vw"
-                  priority={index < 6}
+                  quality={80}
+                  priority={index < 4}
                 />
               </span>
             </button>
@@ -190,7 +129,7 @@ export function GalleryClient({ filenames }: Props) {
             <button
               type="button"
               onClick={goPrev}
-              className="my-auto shrink-0 self-center rounded-full border border-white/20 p-3 text-white transition hover:border-white/40 hover:bg-white/10"
+              className="my-auto shrink-0 cursor-pointer self-center rounded-full border border-white/20 p-3 text-white transition hover:border-white/40 hover:bg-white/10"
               aria-label="Previous image"
             >
               <span className="block text-xl leading-none" aria-hidden>
@@ -212,15 +151,18 @@ export function GalleryClient({ filenames }: Props) {
               aria-label="Close lightbox"
             >
               <div
-                className="flex h-full max-h-[min(85dvh,85vh)] w-full max-w-[min(96vw,1400px)] items-center justify-center"
+                className="relative flex h-full max-h-[min(85dvh,85vh)] w-full max-w-[min(96vw,1400px)] items-center justify-center"
                 onClick={(e) => e.stopPropagation()}
               >
-                {/* blob: URLs — use native img */}
-                <img
-                  src={mainSrc || galleryPath(filenames[activeIndex])}
+                <Image
+                  key={activeImage.src}
+                  src={activeImage.src}
                   alt={`Gallery photo ${activeIndex + 1} of ${n}`}
-                  className="max-h-[min(85dvh,85vh)] max-w-full object-contain"
-                  decoding="async"
+                  fill
+                  className="object-contain"
+                  sizes="100vw"
+                  quality={80}
+                  priority
                   draggable={false}
                 />
               </div>
@@ -229,7 +171,7 @@ export function GalleryClient({ filenames }: Props) {
             <button
               type="button"
               onClick={goNext}
-              className="my-auto shrink-0 self-center rounded-full border border-white/20 p-3 text-white transition hover:border-white/40 hover:bg-white/10"
+              className="my-auto shrink-0 cursor-pointer self-center rounded-full border border-white/20 p-3 text-white transition hover:border-white/40 hover:bg-white/10"
               aria-label="Next image"
             >
               <span className="block text-xl leading-none" aria-hidden>
@@ -243,9 +185,9 @@ export function GalleryClient({ filenames }: Props) {
               className="flex gap-2 overflow-x-auto px-[2vw] py-3 [scrollbar-width:thin]"
               style={{ scrollbarColor: "rgba(255,255,255,0.25) transparent" }}
             >
-              {filenames.map((file, i) => (
+              {images.map((image, i) => (
                 <button
-                  key={file}
+                  key={image.src}
                   type="button"
                   ref={(el) => {
                     thumbRefs.current[i] = el;
@@ -259,12 +201,14 @@ export function GalleryClient({ filenames }: Props) {
                       : "border-transparent opacity-70 hover:opacity-100"
                   }`}
                 >
-                  <img
-                    src={thumbSrc(file)}
+                  <Image
+                    src={image.src}
                     alt=""
-                    className="h-full w-full object-cover"
+                    fill
+                    className="object-cover"
+                    sizes="96px"
+                    quality={60}
                     loading="lazy"
-                    decoding="async"
                     draggable={false}
                   />
                 </button>

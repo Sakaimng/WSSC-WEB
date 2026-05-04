@@ -12,6 +12,7 @@ import type { ReactNode } from "react";
 import {
   PageTransitionContext,
 } from "@/components/page-transition-context";
+import { SiteFooter } from "@/components/SiteFooter";
 import { SiteNav } from "@/components/SiteNav";
 
 const FADE_OUT = { duration: 0.28, ease: "power2.in" as const };
@@ -101,6 +102,7 @@ export function PageTransition({ children }: Props) {
           {children}
         </div>
       </main>
+      <SiteFooter />
     </PageTransitionContext.Provider>
   );
 }

@@ -4,6 +4,7 @@ import gsap from "gsap";
 import { TransitionLink as Link } from "@/components/TransitionLink";
 import { useLayoutEffect, useRef } from "react";
 import { PAGE_PRELOADER_DONE_EVENT } from "@/components/PagePreloader";
+import { EXTERNAL_TICKETS_URL } from "@/lib/config";
 
 export function HomeHero() {
   const root = useRef<HTMLDivElement>(null);
@@ -71,10 +72,10 @@ export function HomeHero() {
       className="flex flex-1 flex-col items-center justify-center px-4 text-center sm:px-8"
     >
       <h1 className="font-sans font-semibold leading-[0.9] tracking-tight">
-        <span className="hero-line block text-5xl text-white sm:text-7xl md:text-8xl">
+        <span className="hero-line block text-[2.55rem] text-white sm:text-7xl md:text-8xl">
           LIVE STAND-UP.
         </span>
-        <span className="hero-line block text-5xl text-neutral-300 sm:text-7xl md:text-8xl">
+        <span className="hero-line block text-[2.55rem] text-neutral-300 sm:text-7xl md:text-8xl">
           SERIOUS FUN.
         </span>
       </h1>
@@ -89,7 +90,7 @@ export function HomeHero() {
           See the room
         </Link>
         <Link
-          href="/tickets"
+          href={EXTERNAL_TICKETS_URL}
           className="hero-cta-btn rounded-full border border-white bg-white px-8 py-3 text-sm font-semibold text-black transition hover:bg-neutral-200"
         >
           Get tickets

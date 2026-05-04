@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PagePreloader from "@/components/PagePreloader";
 import { PageTransition } from "@/components/PageTransition";
+import { SmoothScroll } from "@/components/SmoothScroll";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -20,6 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full bg-black font-sans antialiased">
       <body className="flex min-h-full flex-col bg-black font-sans text-white">
+        <SmoothScroll />
         <PagePreloader />
         <PageTransition>{children}</PageTransition>
       </body>
