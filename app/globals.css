@@ -2,21 +2,42 @@
 
 :root {
   --background: #000000;
-  --foreground: #ffffff;
+  --site-white: #f1f1f1;
+  --site-white-rgb: 241, 241, 241;
+  --foreground: var(--site-white);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans:
-    "Helvetica Neue", helvetica, arial, ui-sans-serif, system-ui, sans-serif;
+  --color-white: var(--site-white);
+  --font-sans: "Helvetica Neue", helvetica, arial, sans-serif;
+  --font-mono: "Helvetica Neue", helvetica, arial, sans-serif;
+  --text-xs: 1em;
+  --text-sm: 1em;
+  --text-base: 1em;
+  --text-lg: 1em;
+  --text-xl: 1em;
+  --text-2xl: 1em;
+  --text-3xl: 1em;
+  --text-4xl: 1em;
+  --text-5xl: 1em;
+  --text-6xl: 1em;
+  --tracking-tighter: 0;
+  --tracking-tight: 0;
+  --tracking-normal: 0;
+  --tracking-wide: 0;
+  --tracking-wider: 0;
+  --tracking-widest: 0;
 }
 
 html {
   height: 100%;
   background-color: #000000;
-  font-family:
-    "Helvetica Neue", helvetica, arial, ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.81em;
+  font-family: "Helvetica Neue", helvetica, arial, sans-serif;
+  letter-spacing: 0;
+  text-transform: uppercase;
   overscroll-behavior: none;
   scroll-behavior: auto;
 }
@@ -26,7 +47,62 @@ body {
   background-color: #000000;
   color: var(--foreground);
   font-family: inherit;
+  font-size: 1em;
+  letter-spacing: inherit;
+  text-transform: inherit;
   overscroll-behavior: none;
+}
+
+button,
+input,
+select,
+textarea,
+a,
+label {
+  font-family: inherit;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+button,
+input,
+select,
+textarea {
+  text-transform: uppercase !important;
+}
+
+::placeholder {
+  text-transform: uppercase;
+}
+
+/* Home route only — no document scroll (Lenis uses height:auto on html; override). */
+html.home-lock-scroll,
+html.home-lock-scroll body {
+  overflow: hidden !important;
+  height: 100% !important;
+}
+
+html.home-lock-scroll.lenis,
+html.home-lock-scroll.lenis body {
+  height: 100% !important;
+  overflow: hidden !important;
+}
+
+/* Japanese: slightly smaller root so CJK reads closer to Latin visual weight (Tailwind rem scales with this). */
+html:lang(ja) {
+  font-size: calc(0.81em * 0.9375);
+  font-family:
+    "Helvetica Neue",
+    helvetica,
+    arial,
+    "Hiragino Kaku Gothic ProN",
+    "Hiragino Sans",
+    "Noto Sans JP",
+    "Yu Gothic UI",
+    "Yu Gothic",
+    sans-serif;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 html.lenis,
@@ -44,4 +120,416 @@ html.lenis body {
 
 .lenis.lenis-stopped {
   overflow: clip;
+}
+
+@keyframes hero-ring-spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes hero-ring-light-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes hero-ring-light-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* See-the-room CTA — static dim ring + spinning highlight only */
+.hero-ring-wrap {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 9999px;
+  padding: 2px;
+  background: rgba(var(--site-white-rgb), 0.12);
+}
+
+/* See-the-room CTA — thinner ring + narrower highlight arc */
+.hero-ring-wrap--see-room {
+  padding: 1px;
+  background: rgba(var(--site-white-rgb), 0.1);
+}
+
+.hero-ring-wrap--see-room .hero-ring-light {
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg 238deg,
+    rgba(var(--site-white-rgb), 0.12) 248deg,
+    rgba(var(--site-white-rgb), 0.45) 258deg,
+    rgba(var(--site-white-rgb), 0.85) 268deg,
+    rgba(var(--site-white-rgb), 0.98) 274deg,
+    var(--site-white) 280deg,
+    rgba(var(--site-white-rgb), 0.98) 286deg,
+    rgba(var(--site-white-rgb), 0.85) 292deg,
+    rgba(var(--site-white-rgb), 0.45) 302deg,
+    rgba(var(--site-white-rgb), 0.12) 312deg,
+    transparent 322deg 360deg
+  );
+}
+
+.hero-ring-light {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 250%;
+  height: 250%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg 218deg,
+    rgba(var(--site-white-rgb), 0.12) 230deg,
+    rgba(var(--site-white-rgb), 0.45) 242deg,
+    rgba(var(--site-white-rgb), 0.85) 254deg,
+    rgba(var(--site-white-rgb), 0.98) 266deg,
+    var(--site-white) 280deg,
+    rgba(var(--site-white-rgb), 0.98) 294deg,
+    rgba(var(--site-white-rgb), 0.85) 306deg,
+    rgba(var(--site-white-rgb), 0.45) 318deg,
+    rgba(var(--site-white-rgb), 0.12) 330deg,
+    transparent 342deg 360deg
+  );
+  animation: hero-ring-spin 4.5s linear infinite;
+  will-change: transform;
+}
+
+.hero-ring-light--fade-in {
+  opacity: 0;
+  animation:
+    hero-ring-spin 4.5s linear infinite,
+    hero-ring-light-fade-in 0.8s ease-out forwards;
+}
+
+.hero-ring-light--fade-out {
+  animation:
+    hero-ring-spin 4.5s linear infinite,
+    hero-ring-light-fade-out 0.8s ease-in forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-ring-light,
+  .hero-ring-light--fade-in,
+  .hero-ring-light--fade-out {
+    display: none;
+  }
+}
+
+/* Hero portrait: anchor mic (~50% × ~60% in source) to viewport center */
+.hero-bg-wrap {
+  --hero-focus-y: 60%;
+}
+
+.hero-bg-image {
+  object-fit: cover;
+  object-position: 50% var(--hero-focus-y);
+}
+
+/* Vignette center = viewport center; object-position already places the mic there */
+.hero-bg-vignette {
+  background: radial-gradient(
+    ellipse 75% 65% at 50% 50%,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.28) 34%,
+    rgba(0, 0, 0, 1) 100%
+  );
+}
+
+@media (max-aspect-ratio: 4/5) {
+  .hero-bg-wrap {
+    --hero-focus-y: 58%;
+  }
+}
+
+@media (min-aspect-ratio: 16/10) {
+  .hero-bg-wrap {
+    --hero-focus-y: 61%;
+  }
+}
+
+/* Inner pages: fill main column below fixed nav (no extra page padding) */
+.page-viewport {
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  overflow: visible;
+  padding-left: 2vw;
+  padding-right: 2vw;
+}
+
+@media (min-width: 640px) {
+  .page-viewport {
+    height: 100%;
+    flex: 1 1 0%;
+    overflow: hidden;
+  }
+
+  .schedule-page.page-viewport {
+    overflow: visible;
+  }
+}
+
+.page-viewport--scroll {
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+@media (min-width: 640px) {
+  .page-viewport--scroll {
+    overflow-y: auto;
+  }
+}
+
+/* About portraits — avoid sub-pixel gaps at grid column edges */
+.about-portrait-grid {
+  isolation: isolate;
+}
+
+.about-portrait-card {
+  transform: translateZ(0);
+}
+
+.about-portrait-card img {
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Founder full-story overlay — lock document scroll */
+html.founder-story-open,
+html.founder-story-open body {
+  overflow: hidden !important;
+}
+
+.about-story-scroll {
+  position: fixed;
+  inset: 0;
+  box-sizing: border-box;
+  height: 100dvh;
+  max-height: 100dvh;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  pointer-events: auto;
+  text-transform: none;
+}
+
+.about-story-scroll :is(p, span, div) {
+  text-transform: none !important;
+}
+
+.about-story-scroll .about-story-close {
+  text-transform: uppercase !important;
+}
+
+/* Mobile menu open: blur footer to match menu backdrop */
+@media (max-width: 1031px) {
+  html.mobile-menu-open .site-footer {
+    filter: blur(8px);
+    opacity: 0.55;
+    pointer-events: none;
+    transition:
+      filter 300ms ease,
+      opacity 300ms ease;
+  }
+}
+
+/* Map page — fixed viewport height below nav (Mapbox needs non-zero size) */
+.map-page.page-viewport {
+  box-sizing: border-box;
+  height: calc(100dvh - 4rem);
+  min-height: calc(100dvh - 4rem);
+  flex: 1 1 auto;
+  overflow: hidden;
+  padding: 0;
+}
+
+@media (min-width: 640px) {
+  .map-page.page-viewport {
+    height: calc(100dvh - 5rem);
+    min-height: calc(100dvh - 5rem);
+  }
+}
+
+.map-page .map-stage {
+  position: relative;
+  height: 100%;
+  min-height: 100%;
+  width: 100%;
+}
+
+/* Cyber location map (Mapbox) */
+.cyber-map-shell,
+.cyber-map-canvas,
+.cyber-map-canvas .mapboxgl-canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.cyber-map-canvas .mapboxgl-map {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.cyber-map-canvas .mapboxgl-ctrl-bottom-right,
+.cyber-map-canvas .mapboxgl-ctrl-top-right {
+  z-index: 25;
+}
+
+.cyber-map-canvas .mapboxgl-ctrl-group {
+  border: 1px solid rgba(241, 241, 241, 0.15);
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+}
+
+.cyber-map-canvas .mapboxgl-ctrl-group button {
+  filter: invert(1);
+}
+
+.cyber-map-shell .mapboxgl-ctrl-logo,
+.cyber-map-shell .mapboxgl-ctrl-attrib,
+.cyber-map-shell a.mapboxgl-ctrl-logo {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.cyber-map-marker {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.cyber-map-marker:hover .cyber-map-marker__label {
+  border-color: rgba(241, 241, 241, 0.45);
+  color: #ffffff;
+}
+
+.cyber-map-marker:focus-visible {
+  outline: 2px solid rgba(241, 241, 241, 0.6);
+  outline-offset: 4px;
+}
+
+.cyber-map-marker__core {
+  display: block;
+  height: 0.85rem;
+  width: 0.85rem;
+  border-radius: 9999px;
+  background: #f1f1f1;
+  box-shadow: 0 0 28px rgba(241, 241, 241, 0.95);
+}
+
+.cyber-map-marker__pulse {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 4.5rem;
+  width: 4.5rem;
+  transform: translateX(-50%);
+  border-radius: 9999px;
+  border: 1px solid rgba(241, 241, 241, 0.45);
+  animation: cyber-map-pulse 2.2s ease-out infinite;
+}
+
+.cyber-map-marker__label {
+  border-radius: 9999px;
+  border: 1px solid rgba(241, 241, 241, 0.2);
+  background: rgba(0, 0, 0, 0.72);
+  padding: 0.45rem 0.9rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #f1f1f1;
+  text-transform: uppercase;
+  backdrop-filter: blur(6px);
+  white-space: nowrap;
+}
+
+@keyframes cyber-map-pulse {
+  0% {
+    transform: translate(-50%, 0.35rem) scale(0.35);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-50%, 0.35rem) scale(1.15);
+    opacity: 0;
+  }
+}
+
+.cyber-map-metro-marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.cyber-map-metro-marker__ring {
+  display: flex;
+  height: 1.75rem;
+  width: 1.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.35rem;
+  border: 1px solid rgba(241, 241, 241, 0.55);
+  background: rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 18px rgba(241, 241, 241, 0.35);
+}
+
+.cyber-map-metro-marker__core {
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #f1f1f1;
+}
+
+.cyber-map-metro-marker__label {
+  max-width: 7rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(241, 241, 241, 0.18);
+  background: rgba(0, 0, 0, 0.72);
+  padding: 0.35rem 0.65rem;
+  text-align: center;
+  font-size: 0.58rem;
+  font-weight: 600;
+  color: #d4d4d4;
+  backdrop-filter: blur(6px);
+}
+
+/* One text size site-wide (0.81em root); overrides Tailwind arbitrary font sizes */
+[class*="text-["] {
+  font-size: 1em !important;
+}
+
+/* No letter-spacing anywhere */
+[class*="tracking-"] {
+  letter-spacing: 0 !important;
 }

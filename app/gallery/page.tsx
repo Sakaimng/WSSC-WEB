@@ -1,36 +1,24 @@
-import type { Metadata } from "next";
 import { GalleryClient } from "@/components/GalleryClient";
+import { GalleryEmptyMessage } from "@/components/GalleryEmptyMessage";
 import { getGalleryImages } from "@/lib/gallery-images";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "Gallery",
-  description: "Photos from Why So Serious Comedy.",
-};
+  description:
+    "Photos from stand-up comedy nights at Why So Serious Comedy — live English comedy in Tokyo, Kinshicho. See the room, the crowd, and the show.",
+  path: "/gallery",
+});
 
 export default function GalleryPage() {
   const images = getGalleryImages();
 
   return (
-    <div className="box-border w-full max-w-none flex-1 px-[2vw] py-12 sm:py-16">
-      <header className="mb-12">
-        <h1 className="font-sans text-4xl font-semibold tracking-wide text-white sm:text-5xl">
-          Gallery
-        </h1>
-        <p className="mt-4 text-neutral-400">
-          {images.length > 0
-            ? `${images.length} photos from the room. Optimized images are served from the site.`
-            : "Add optimized images to public/gallery to populate this grid."}
-        </p>
-      </header>
+    <div className="page-viewport page-viewport--scroll -mt-16 pt-16 pb-4 sm:-mt-20 sm:pt-20">
+      
 
       {images.length === 0 ? (
-        <p className="text-sm text-neutral-500">
-          No images found. Expected public images under{" "}
-          <code className="rounded border border-white/15 bg-white/5 px-1.5 py-0.5 text-white">
-            public/gallery/
-          </code>
-          .
-        </p>
+        <GalleryEmptyMessage />
       ) : (
         <GalleryClient images={images} />
       )}

@@ -24,6 +24,7 @@ export function SmoothScroll() {
       wheelMultiplier: 0.9,
       syncTouch: true,
       syncTouchLerp: 0.08,
+      allowNestedScroll: true,
     });
 
     lenis.scrollTo(0, { immediate: true, force: true });
@@ -53,7 +54,31 @@ export function SmoothScroll() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    lenisRef.current?.scrollTo(0, { immediate: true, force: true });
+    const lenis = lenisRef.current;
+    if (!lenis) return;
+    lenis.scrollTo(0, { immediate: true, force: true });
+    if (pathname === "/") {
+      lenis.stop();
+    } else {
+      lenis.start();
+    }
+  }, [pathname]);
+
+  useEffect(() => {
+    const lenis = lenisRef.current;
+    if (!lenis) return;
+
+    const onScrollLock = (event: Event) => {
+      const locked = (event as CustomEvent<{ locked: boolean }>).detail?.locked;
+      if (locked) {
+        lenis.stop();
+        return;
+      }
+      if (pathname !== "/") lenis.start();
+    };
+
+    window.addEventListener("wssc-scroll-lock", onScrollLock);
+    return () => window.removeEventListener("wssc-scroll-lock", onScrollLock);
   }, [pathname]);
 
   return null;

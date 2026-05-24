@@ -68,8 +68,22 @@ export function PageTransition({ children }: Props) {
   );
 
   useEffect(() => {
+    if (pathname !== "/") return;
+    document.documentElement.classList.add("home-lock-scroll");
+    document.body.classList.add("home-lock-scroll");
+    return () => {
+      document.documentElement.classList.remove("home-lock-scroll");
+      document.body.classList.remove("home-lock-scroll");
+    };
+  }, [pathname]);
+
+  useEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
+
+    if (pathname === "/map") {
+      gsap.set(el, { autoAlpha: 1, visibility: "visible" });
+    }
 
     if (prevPathnameRef.current === null) {
       prevPathnameRef.current = pathname;
@@ -91,18 +105,38 @@ export function PageTransition({ children }: Props) {
     }
   }, [pathname]);
 
+  const isGallery =
+    pathname === "/gallery" || pathname.startsWith("/gallery/");
+  const isMap = pathname === "/map";
+
   return (
     <PageTransitionContext.Provider value={api}>
       <SiteNav />
-      <main className="flex flex-1 flex-col bg-black pt-16 sm:pt-20">
+      <main
+        className={`box-border flex flex-1 flex-col ${
+          pathname === "/"
+            ? "min-h-0 overflow-hidden bg-transparent pt-0 pb-0"
+            : isGallery
+              ? "min-h-[100dvh] h-auto overflow-x-clip overflow-y-visible bg-black pt-0 pb-11 sm:h-[100dvh] sm:max-h-[100dvh] sm:overflow-hidden sm:pb-12"
+              : isMap
+                ? "box-border h-[100dvh] max-h-[100dvh] overflow-hidden bg-black pt-16 pb-0 sm:pt-20"
+                : "min-h-[100dvh] h-auto overflow-x-clip overflow-y-visible bg-black pt-16 pb-11 sm:h-[100dvh] sm:max-h-[100dvh] sm:overflow-hidden sm:pt-20 sm:pb-12"
+        }`}
+      >
         <div
           ref={wrapRef}
-          className="flex min-h-0 flex-1 flex-col"
+          className={`flex min-h-0 flex-1 flex-col ${
+            pathname === "/"
+              ? "h-[100dvh] min-h-0 overflow-hidden"
+              : isMap
+                ? "h-full min-h-0 flex-1 overflow-hidden"
+                : "h-auto overflow-visible sm:h-full sm:overflow-hidden"
+          }`}
         >
           {children}
         </div>
       </main>
-      <SiteFooter />
+      {!isMap ? <SiteFooter /> : null}
     </PageTransitionContext.Provider>
   );
 }

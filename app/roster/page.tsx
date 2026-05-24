@@ -1,16 +1,18 @@
-import type { Metadata } from "next";
 import { comedians } from "@/lib/roster";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Roster",
-  description: "Regular comedians at Why So Serious Comedy.",
-};
+export const metadata = createPageMetadata({
+  title: "Comedian Roster",
+  description:
+    "Regular comedians at Why So Serious Comedy — English stand-up comedy performers in Tokyo, Kinshicho.",
+  path: "/roster",
+});
 
 export default function RosterPage() {
   return (
-    <div className="box-border w-full max-w-none flex-1 px-[2vw] py-12 sm:py-16">
-      <header className="mb-12">
-        <h1 className="font-sans text-4xl font-semibold tracking-wide text-white sm:text-5xl">
+    <div className="page-viewport page-viewport--scroll py-4">
+      <header className="mb-6">
+        <h1 className="font-sans text-base font-semibold text-white">
           Comedian roster
         </h1>
         <p className="mt-4 text-neutral-400">
@@ -34,7 +36,7 @@ export default function RosterPage() {
             />
             <div className="min-w-0">
               <h2 className="text-lg font-semibold text-white">{c.name}</h2>
-              <p className="mt-0.5 text-xs font-semibold uppercase tracking-wider text-neutral-400">
+              <p className="mt-0.5 text-xs font-semibold text-neutral-400">
                 {c.role}
               </p>
               <p className="mt-3 text-sm leading-relaxed text-neutral-400">{c.bio}</p>

@@ -6,9 +6,11 @@ const galleryDir = path.join(process.cwd(), "public", "gallery");
 const imageExt = /\.(jpe?g)$/i;
 const maxWidth = 1920;
 const jpegQuality = 80;
+/** Home hero uses `public/hero/home-hero.jpg` — do not recompress via this script. */
+const skipFiles = new Set(["L1000136.jpg"]);
 
 const files = (await fs.readdir(galleryDir))
-  .filter((file) => imageExt.test(file))
+  .filter((file) => imageExt.test(file) && !skipFiles.has(file))
   .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 
 let beforeTotal = 0;

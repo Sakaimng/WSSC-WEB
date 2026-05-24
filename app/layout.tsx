@@ -1,16 +1,16 @@
-import type { Metadata } from "next";
+import { LanguageProvider } from "@/components/LanguageProvider";
 import PagePreloader from "@/components/PagePreloader";
 import { PageTransition } from "@/components/PageTransition";
+import { SeoJsonLd } from "@/components/SeoJsonLd";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { rootMetadata } from "@/lib/seo";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: {
-    default: "Why So Serious Comedy",
-    template: "%s | Why So Serious Comedy",
+export const metadata = {
+  ...rootMetadata,
+  icons: {
+    icon: "/FAVICON/Vector%20(1).svg",
   },
-  description:
-    "Stand-up comedy club: shows, gallery, and tickets. Why So Serious Comedy.",
 };
 
 export default function RootLayout({
@@ -20,10 +20,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full bg-black font-sans antialiased">
-      <body className="flex min-h-full flex-col bg-black font-sans text-white">
-        <SmoothScroll />
-        <PagePreloader />
-        <PageTransition>{children}</PageTransition>
+      <body className="flex min-h-[100dvh] flex-col bg-black font-sans text-white">
+        <SeoJsonLd />
+        <LanguageProvider>
+          <SmoothScroll />
+          <PagePreloader />
+          <PageTransition>{children}</PageTransition>
+        </LanguageProvider>
       </body>
     </html>
   );

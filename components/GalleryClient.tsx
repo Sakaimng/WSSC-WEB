@@ -75,7 +75,7 @@ export function GalleryClient({ images }: Props) {
 
   return (
     <>
-      <ul className="grid grid-cols-2 gap-3 lg:grid-cols-3">
+      <ul className="grid grid-cols-2 gap-px lg:grid-cols-3 [&:has(button:hover)_button:not(:hover)_img]:brightness-[0.35] [&:has(button:hover)_button:not(:hover)_.gallery-index]:opacity-40">
         {images.map((image, index) => (
           <li key={image.src}>
             <button
@@ -84,7 +84,7 @@ export function GalleryClient({ images }: Props) {
                 setActiveIndex(index);
                 setOpen(true);
               }}
-              className="group block w-full cursor-pointer overflow-hidden rounded-lg border border-white/10 bg-neutral-950 p-0 text-left transition hover:border-white/25"
+              className="group block w-full cursor-pointer overflow-hidden bg-neutral-950 p-0 text-left"
               aria-label={`Open photo ${index + 1} of ${n} in lightbox`}
             >
               <span className="relative block aspect-[4/3] w-full">
@@ -97,6 +97,9 @@ export function GalleryClient({ images }: Props) {
                   quality={80}
                   priority={index < 4}
                 />
+                <span className="gallery-index pointer-events-none absolute bottom-2 left-2 z-10 font-sans text-xs tabular-nums text-white/85">
+                  .{String(index + 1).padStart(2, "0")}
+                </span>
               </span>
             </button>
           </li>
@@ -183,7 +186,7 @@ export function GalleryClient({ images }: Props) {
           <div className="shrink-0 border-t border-white/10 bg-black/60">
             <div
               className="flex gap-2 overflow-x-auto px-[2vw] py-3 [scrollbar-width:thin]"
-              style={{ scrollbarColor: "rgba(255,255,255,0.25) transparent" }}
+              style={{ scrollbarColor: "rgba(241,241,241,0.25) transparent" }}
             >
               {images.map((image, i) => (
                 <button
@@ -195,7 +198,7 @@ export function GalleryClient({ images }: Props) {
                   onClick={() => setActiveIndex(i)}
                   aria-label={`Show photo ${i + 1}`}
                   aria-current={i === activeIndex ? "true" : undefined}
-                  className={`relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition ${
+                  className={`relative h-16 w-24 shrink-0 overflow-hidden border-2 transition ${
                     i === activeIndex
                       ? "border-white opacity-100"
                       : "border-transparent opacity-70 hover:opacity-100"

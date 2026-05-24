@@ -10,8 +10,8 @@ export function WsscLogo({ className = "h-8 w-auto sm:h-9", priority }: Props) {
     <Image
       src="/brand/wssc-logo.svg"
       alt="Why So Serious Comedy"
-      width={2148}
-      height={119}
+      width={4122}
+      height={272}
       className={className}
       priority={priority}
     />
