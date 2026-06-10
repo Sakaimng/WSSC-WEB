@@ -6,15 +6,6 @@ import { TransitionLink as Link } from "@/components/TransitionLink";
 import { TicketDropdown } from "@/components/TicketDropdown";
 import { useI18n } from "@/components/LanguageProvider";
 import { COMEDIAN_SIGNUP_FORM_URL } from "@/lib/config";
-import {
-  LOGO_COMPACT_PATH_ORDER,
-  LOGO_COMPACT_PATH_SET,
-  LOGO_COMPACT_TARGET_X,
-  LOGO_COMPACT_VIEW_W,
-  PRELOADER_LOGO_PATHS,
-  PRELOADER_VIEW_H,
-  PRELOADER_VIEW_W,
-} from "@/lib/preloader-logo-paths";
 import { getUpcomingShows, SHOW_TIME } from "@/lib/show-schedule";
 import { formatShowDate, languages, type Language } from "@/lib/i18n";
 import { usePathname } from "next/navigation";
@@ -27,17 +18,98 @@ const links = [
   { href: "/about", labelKey: "about" },
 ] as const;
 
-const NAV_INITIAL_PATHS = LOGO_COMPACT_PATH_SET;
-const NAV_INITIAL_PATH_ORDER = LOGO_COMPACT_PATH_ORDER;
-const NAV_COMPACT_VIEW_W = LOGO_COMPACT_VIEW_W;
-const NAV_COMPACT_TARGET_X = LOGO_COMPACT_TARGET_X;
+const NAV_SITE_TITLE = "WHY SO SERIOUS COMEDY";
+const NAV_SITE_SHORT = "WSSC";
+
+const brandTextClassName =
+  "font-sans text-xs font-semibold uppercase leading-none text-white";
+
+function NavBrandMark({ compact }: { compact: boolean }) {
+  const brandShellRef = useRef<HTMLSpanElement>(null);
+  const brandFullRef = useRef<HTMLSpanElement>(null);
+  const brandCompactRef = useRef<HTMLSpanElement>(null);
+  const hasAnimatedBrandRef = useRef(false);
+  const brandWidthRef = useRef(0);
+
+  useLayoutEffect(() => {
+    const shell = brandShellRef.current;
+    const full = brandFullRef.current;
+    const compactEl = brandCompactRef.current;
+    if (!shell || !full || !compactEl) return;
+
+    const targetWidth = compact ? compactEl.offsetWidth : full.offsetWidth;
+
+    gsap.killTweensOf([shell, full, compactEl]);
+
+    if (!hasAnimatedBrandRef.current) {
+      hasAnimatedBrandRef.current = true;
+      brandWidthRef.current = targetWidth;
+      gsap.set(shell, { width: targetWidth });
+      gsap.set(full, { autoAlpha: compact ? 0 : 1, x: 0 });
+      gsap.set(compactEl, { autoAlpha: compact ? 1 : 0, x: 0 });
+      return;
+    }
+
+    const widthState = { width: brandWidthRef.current };
+
+    gsap
+      .timeline({ defaults: { ease: "power3.inOut" } })
+      .to(
+        widthState,
+        {
+          width: targetWidth,
+          duration: 0.5,
+          onUpdate: () => {
+            brandWidthRef.current = widthState.width;
+            gsap.set(shell, { width: widthState.width });
+          },
+        },
+        0,
+      )
+      .to(
+        full,
+        {
+          autoAlpha: compact ? 0 : 1,
+          duration: 0.28,
+          ease: "power2.out",
+        },
+        compact ? 0 : 0.16,
+      )
+      .to(
+        compactEl,
+        {
+          autoAlpha: compact ? 1 : 0,
+          duration: 0.28,
+          ease: "power2.out",
+        },
+        compact ? 0 : 0.16,
+      );
+  }, [compact]);
+
+  return (
+    <span
+      ref={brandShellRef}
+      className="relative inline-block overflow-hidden align-top"
+    >
+      <span
+        ref={brandFullRef}
+        className={`${brandTextClassName} inline-block whitespace-nowrap`}
+      >
+        {NAV_SITE_TITLE}
+      </span>
+      <span
+        ref={brandCompactRef}
+        className={`${brandTextClassName} absolute top-0 left-0 inline-block whitespace-nowrap`}
+      >
+        {NAV_SITE_SHORT}
+      </span>
+    </span>
+  );
+}
+
 function isActiveRoute(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
   return pathname === href || pathname.startsWith(`${href}/`);
-}
-
-function navLogoWidthForViewBox(shell: HTMLElement, viewBoxWidth: number) {
-  return (shell.getBoundingClientRect().height * viewBoxWidth) / PRELOADER_VIEW_H;
 }
 
 function LanguageToggle({ className = "" }: { className?: string }) {
@@ -88,10 +160,6 @@ export function SiteNav() {
   const menuRef = useRef<HTMLElement>(null);
   const previousPathnameRef = useRef(pathname);
   const hasAnimatedMenuRef = useRef(false);
-  const logoShellRef = useRef<HTMLSpanElement>(null);
-  const logoSvgRef = useRef<SVGSVGElement>(null);
-  const hasAnimatedLogoRef = useRef(false);
-  const logoViewBoxWidthRef = useRef(PRELOADER_VIEW_W);
 
   useEffect(() => {
     if (previousPathnameRef.current === pathname) return;
@@ -104,84 +172,6 @@ export function SiteNav() {
     document.documentElement.classList.toggle("mobile-menu-open", menuOpen);
     return () => document.documentElement.classList.remove("mobile-menu-open");
   }, [menuOpen]);
-
-  useLayoutEffect(() => {
-    const shell = logoShellRef.current;
-    const svg = logoSvgRef.current;
-    if (!shell || !svg) return;
-
-    const compact = pathname !== "/";
-    const targetViewBoxWidth = compact ? NAV_COMPACT_VIEW_W : PRELOADER_VIEW_W;
-    const paths = gsap.utils.toArray<SVGPathElement>(".nav-logo-path", svg);
-    const mutedPaths = paths.filter((_, index) => !NAV_INITIAL_PATHS.has(index));
-    const initialPaths = NAV_INITIAL_PATH_ORDER.map((index) => paths[index]).filter(Boolean);
-    const compactX = initialPaths.map((path, index) => {
-      const box = path.getBBox();
-      return NAV_COMPACT_TARGET_X[index] - box.x;
-    });
-
-    gsap.killTweensOf([shell, svg, ...paths]);
-
-    if (!hasAnimatedLogoRef.current) {
-      hasAnimatedLogoRef.current = true;
-      logoViewBoxWidthRef.current = targetViewBoxWidth;
-      gsap.set(shell, {
-        width: navLogoWidthForViewBox(shell, targetViewBoxWidth),
-      });
-      svg.setAttribute(
-        "viewBox",
-        `0 0 ${targetViewBoxWidth} ${PRELOADER_VIEW_H}`,
-      );
-      gsap.set(paths, { autoAlpha: 1, x: 0 });
-      if (compact) {
-        gsap.set(mutedPaths, { autoAlpha: 0 });
-        initialPaths.forEach((path, index) => {
-          gsap.set(path, { x: compactX[index] });
-        });
-      }
-      return;
-    }
-
-    const viewBoxState = { width: logoViewBoxWidthRef.current };
-
-    gsap
-      .timeline({ defaults: { ease: "power3.inOut" } })
-      .to(
-        viewBoxState,
-        {
-          width: targetViewBoxWidth,
-          duration: 0.5,
-          onUpdate: () => {
-            logoViewBoxWidthRef.current = viewBoxState.width;
-            svg.setAttribute(
-              "viewBox",
-              `0 0 ${viewBoxState.width} ${PRELOADER_VIEW_H}`,
-            );
-            gsap.set(shell, {
-              width: navLogoWidthForViewBox(shell, viewBoxState.width),
-            });
-          },
-        },
-        0,
-      )
-      .to(
-        mutedPaths,
-        {
-          autoAlpha: compact ? 0 : 1,
-          duration: 0.28,
-          ease: "power2.out",
-        },
-        compact ? 0 : 0.16,
-      )
-      .to(
-        initialPaths,
-        {
-          x: (index) => (compact ? compactX[index] : 0),
-          duration: 0.5,
-        },
-        0,
-      );
-  }, [pathname]);
 
   useLayoutEffect(() => {
     const menu = menuRef.current;
@@ -220,38 +210,15 @@ export function SiteNav() {
   const scheduleLink = nextShow && nextShowDate && (
     <Link
       href="/schedule"
-      className="shrink-0 rounded-full border border-white/15 bg-white/[0.03] px-4 py-2 text-xs font-semibold text-neutral-300 backdrop-blur-md transition hover:border-white/35 hover:text-white"
+      className="shrink-0 text-xs font-semibold text-white transition hover:text-white"
     >
       {scheduleLinkLabel}
     </Link>
   );
 
   const isHome = pathname === "/";
-
-  const logoMark = (
-    <span
-      ref={logoShellRef}
-      className="relative block h-[14px] overflow-hidden sm:h-[18px]"
-    >
-      <svg
-        ref={logoSvgRef}
-        viewBox={`0 0 ${PRELOADER_VIEW_W} ${PRELOADER_VIEW_H}`}
-        xmlns="http://www.w3.org/2000/svg"
-        className="block h-full w-auto overflow-visible"
-        preserveAspectRatio="xMinYMid meet"
-        aria-hidden="true"
-      >
-        {PRELOADER_LOGO_PATHS.map((d, index) => (
-          <path
-            key={index}
-            d={d}
-            className="nav-logo-path"
-            fill="currentColor"
-          />
-        ))}
-      </svg>
-    </span>
-  );
+  const brandPositionClassName =
+    "block shrink-0 min-[1032px]:absolute min-[1032px]:top-1/2 min-[1032px]:left-1/2 min-[1032px]:-translate-x-1/2 min-[1032px]:-translate-y-1/2";
 
   return (
     <>
@@ -267,23 +234,19 @@ export function SiteNav() {
           {scheduleLink}
         </div>
 
-        {isHome ? (
-          <span
-            className="block shrink-0 opacity-95 min-[1032px]:absolute min-[1032px]:top-1/2 min-[1032px]:left-1/2 min-[1032px]:-translate-x-1/2 min-[1032px]:-translate-y-1/2"
-            role="img"
-            aria-label="Why So Serious Comedy home"
-          >
-            {logoMark}
-          </span>
-        ) : (
-          <Link
-            href="/"
-            className="block shrink-0 opacity-95 transition hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white min-[1032px]:absolute min-[1032px]:top-1/2 min-[1032px]:left-1/2 min-[1032px]:-translate-x-1/2 min-[1032px]:-translate-y-1/2"
-            aria-label="Why So Serious Comedy home"
-          >
-            {logoMark}
-          </Link>
-        )}
+        <div
+          className={`${brandPositionClassName} relative`}
+          aria-label={isHome ? "Why So Serious Comedy home" : undefined}
+        >
+          <NavBrandMark compact={!isHome} />
+          {!isHome ? (
+            <Link
+              href="/"
+              className="absolute inset-0 z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+              aria-label="Why So Serious Comedy home"
+            />
+          ) : null}
+        </div>
         <div className="flex items-center justify-end gap-2 min-[1032px]:flex-1">
           <button
             type="button"
@@ -296,7 +259,7 @@ export function SiteNav() {
             <MobileMenuToggleLabel open={menuOpen} />
           </button>
           <nav
-            className="hidden min-[1032px]:flex flex-wrap items-center justify-end gap-x-4 gap-y-2 min-[1032px]:gap-x-8"
+            className="hidden min-[1032px]:flex flex-wrap items-center justify-end gap-x-3 gap-y-1 min-[1032px]:gap-x-4"
             aria-label={t.nav.mainLabel}
           >
             {links.map(({ href, labelKey }) => {
@@ -307,11 +270,7 @@ export function SiteNav() {
                   key={href}
                   href={href}
                   aria-current={active ? "page" : undefined}
-                  className={`text-xs font-medium transition ${
-                    active
-                      ? "text-white"
-                      : "text-neutral-400 hover:text-white"
-                  }`}
+                  className="text-xs font-medium text-white transition hover:text-white"
                 >
                   {t.nav[labelKey]}
                 </Link>
@@ -339,11 +298,7 @@ export function SiteNav() {
                 key={href}
                 href={href}
                 aria-current={active ? "page" : undefined}
-                className={`mobile-menu-item block rounded-lg px-3 py-3 text-base font-medium transition ${
-                  active
-                    ? "bg-white/10 text-white"
-                    : "text-neutral-300 hover:bg-white/10 hover:text-white"
-                }`}
+                className="mobile-menu-item block rounded-lg px-3 py-3 text-base font-medium text-white transition hover:bg-white/10 hover:text-white"
               >
                 {t.nav[labelKey]}
               </Link>
@@ -352,7 +307,7 @@ export function SiteNav() {
           {nextShow && nextShowDate ? (
             <Link
               href="/schedule"
-              className="mobile-menu-item block rounded-lg border border-white/10 px-3 py-3 text-sm font-medium text-neutral-300 transition hover:bg-white/10 hover:text-white"
+              className="mobile-menu-item block rounded-lg px-3 py-3 text-sm font-medium text-neutral-300 transition hover:bg-white/10 hover:text-white"
             >
               <span className="block text-xs text-neutral-500">
                 {t.nav.nextShow}

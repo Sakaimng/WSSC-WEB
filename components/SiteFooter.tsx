@@ -8,7 +8,6 @@ import {
 import {
   formatTokyoTimeWithMilliseconds,
   getUpcomingShows,
-  isShowLive,
   SHOW_TIME,
 } from "@/lib/show-schedule";
 import { TransitionLink as Link } from "@/components/TransitionLink";
@@ -19,8 +18,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 function FooterJptClock() {
   const { t } = useI18n();
   const timeRef = useRef<HTMLTimeElement>(null);
-  const [live, setLive] = useState(false);
-  const livePrev = useRef(false);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => setHydrated(true), []);
@@ -31,54 +28,26 @@ function FooterJptClock() {
     let raf = 0;
 
     const tick = () => {
-      const now = new Date();
       const el = timeRef.current;
       if (el) {
-        el.textContent = formatTokyoTimeWithMilliseconds(now);
-      }
-      const nextLive = isShowLive(now);
-      if (nextLive !== livePrev.current) {
-        livePrev.current = nextLive;
-        setLive(nextLive);
+        el.textContent = formatTokyoTimeWithMilliseconds(new Date());
       }
       raf = requestAnimationFrame(tick);
     };
 
-    livePrev.current = isShowLive();
-    setLive(livePrev.current);
     raf = requestAnimationFrame(tick);
 
     return () => cancelAnimationFrame(raf);
   }, [hydrated]);
 
   return (
-    <div className="flex flex-col items-end gap-0.5 text-sm leading-none">
-      <div className="flex items-baseline gap-2 font-sans text-[0.65rem] tabular-nums text-neutral-400">
-        <span className="font-sans text-[0.62rem] font-semibold text-neutral-500">
-          {t.nav.jptClock}
-        </span>
-        <time ref={timeRef} className="text-neutral-300" suppressHydrationWarning aria-hidden>
-          {hydrated ? formatTokyoTimeWithMilliseconds(new Date()) : "00:00:00.000"}
-        </time>
-      </div>
-      <div
-        className="flex items-center gap-1.5 text-[0.62rem] font-semibold text-neutral-400"
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        <span
-          className={`h-1.5 w-1.5 shrink-0 rounded-full ${
-            live
-              ? "bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.55)]"
-              : "bg-neutral-600"
-          }`}
-          aria-hidden
-        />
-        <span className={live ? "text-emerald-400/95" : "text-neutral-500"}>
-          {live ? t.nav.showLive : t.nav.showOffline}
-        </span>
-      </div>
+    <div className="flex items-baseline gap-2 font-sans text-[0.65rem] tabular-nums leading-none text-white">
+      <span className="font-sans text-[0.62rem] font-semibold text-white">
+        {t.nav.jptClock}
+      </span>
+      <time ref={timeRef} className="text-white" suppressHydrationWarning aria-hidden>
+        {hydrated ? formatTokyoTimeWithMilliseconds(new Date()) : "00:00:00.000"}
+      </time>
     </div>
   );
 }

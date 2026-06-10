@@ -1,14 +1,16 @@
 "use client";
 
 import gsap from "gsap";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useI18n } from "@/components/LanguageProvider";
 import { splitElementIntoLines } from "@/lib/split-text-lines";
+import founderPortrait from "../public/PROFILE/Founder Portrait.jpg";
+import creativeDirectorPortrait from "../public/PROFILE/CD Portrait.jpg";
 
-const FOUNDER_PORTRAIT = "/PROFILE/Founder%20Portrait.jpg";
-const CREATIVE_DIRECTOR_PORTRAIT = "/PROFILE/CD%20Portrait.jpg";
+const FOUNDER_PORTRAIT = founderPortrait;
+const CREATIVE_DIRECTOR_PORTRAIT = creativeDirectorPortrait;
 const STORY_FADE_MS = 300;
 
 function setScrollLocked(locked: boolean) {
@@ -16,7 +18,7 @@ function setScrollLocked(locked: boolean) {
 }
 
 type PortraitCardProps = {
-  imageSrc: string;
+  imageSrc: StaticImageData;
   imageAlt: string;
   imageLabel: string;
   role: string;

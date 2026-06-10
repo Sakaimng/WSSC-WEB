@@ -14,6 +14,7 @@ export function WsscLogo({ className = "h-8 w-auto sm:h-9", priority }: Props) {
       height={272}
       className={className}
       priority={priority}
+      unoptimized
     />
   );
 }

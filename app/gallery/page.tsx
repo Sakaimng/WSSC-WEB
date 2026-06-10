@@ -14,7 +14,7 @@ export default function GalleryPage() {
   const images = getGalleryImages();
 
   return (
-    <div className="page-viewport page-viewport--scroll -mt-16 pt-16 pb-4 sm:-mt-20 sm:pt-20">
+    <div className="page-viewport page-viewport--scroll pb-4">
       
 
       {images.length === 0 ? (

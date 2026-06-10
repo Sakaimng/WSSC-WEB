@@ -200,11 +200,6 @@ export function LocationMapView({
         restrictMapLabelsToTokyo(map);
       });
 
-      map.addControl(
-        new mapboxgl.NavigationControl({ showCompass: false }),
-        "top-right",
-      );
-
       map.on("error", (event) => {
         const message =
           event.error?.message ??
@@ -320,7 +315,6 @@ export function LocationMapView({
         className="cyber-map-fallback relative flex w-full flex-col items-center justify-center overflow-hidden bg-neutral-950 px-6 text-center"
         style={{ minHeight: MAP_MIN_HEIGHT }}
       >
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(241,241,241,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(241,241,241,0.08)_1px,transparent_1px)] bg-[size:44px_44px]" />
         <p className="relative z-10 text-sm font-semibold text-white">
           {mapUnavailableLabel}
         </p>
@@ -357,7 +351,6 @@ export function LocationMapView({
         }`}
         aria-hidden
       >
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(241,241,241,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(241,241,241,0.04)_1px,transparent_1px)] bg-[size:40px_40px]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(241,241,241,0.1),transparent_42%)]" />
       </div>
 
@@ -366,21 +359,21 @@ export function LocationMapView({
           {VENUE_NAME}
         </p>
         <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1.5 text-[0.68rem] font-medium text-neutral-200 sm:grid-cols-4">
-          <p>{VENUE_STREET}</p>
-          <p>{VENUE_NEIGHBORHOOD}</p>
-          <p>{VENUE_CITY}</p>
-          <p className="text-right sm:text-left">{VENUE_REGION}</p>
+          <p className="min-w-0">{VENUE_STREET}</p>
+          <p className="whitespace-nowrap">{VENUE_NEIGHBORHOOD}</p>
+          <p className="whitespace-nowrap">{VENUE_CITY}</p>
+          <p className="whitespace-nowrap text-right sm:text-left">{VENUE_REGION}</p>
         </div>
         <p className="mt-2 flex items-center justify-between gap-3 text-[0.62rem] text-neutral-500">
-          <span>
+          <span className="min-w-0">
             {walkToMetro ? (
               <>
                 <span className="text-neutral-400">{walkToMetro}</span>
                 <span className="text-neutral-600"> · </span>
-                <span>{NEAREST_METRO_STATION.name}</span>
+                <span className="whitespace-nowrap">{NEAREST_METRO_STATION.name}</span>
               </>
             ) : (
-              NEAREST_METRO_STATION.name
+              <span className="whitespace-nowrap">{NEAREST_METRO_STATION.name}</span>
             )}
           </span>
           <span className="shrink-0">{VENUE_COORDINATES}</span>

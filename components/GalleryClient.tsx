@@ -94,7 +94,7 @@ export function GalleryClient({ images }: Props) {
                   fill
                   className="object-cover transition duration-300 group-hover:brightness-110"
                   sizes="(max-width: 1024px) 50vw, 33vw"
-                  quality={80}
+                  quality={75}
                   priority={index < 4}
                 />
                 <span className="gallery-index pointer-events-none absolute bottom-2 left-2 z-10 font-sans text-xs tabular-nums text-white/85">
@@ -164,7 +164,7 @@ export function GalleryClient({ images }: Props) {
                   fill
                   className="object-contain"
                   sizes="100vw"
-                  quality={80}
+                  quality={75}
                   priority
                   draggable={false}
                 />

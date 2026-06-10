@@ -29,6 +29,9 @@
   --tracking-wide: 0;
   --tracking-wider: 0;
   --tracking-widest: 0;
+  --font-weight-normal: 500;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 500;
 }
 
 html {
@@ -48,6 +51,7 @@ body {
   color: var(--foreground);
   font-family: inherit;
   font-size: 1em;
+  font-weight: 500;
   letter-spacing: inherit;
   text-transform: inherit;
   overscroll-behavior: none;
@@ -391,21 +395,6 @@ html.founder-story-open body {
   height: 100%;
 }
 
-.cyber-map-canvas .mapboxgl-ctrl-bottom-right,
-.cyber-map-canvas .mapboxgl-ctrl-top-right {
-  z-index: 25;
-}
-
-.cyber-map-canvas .mapboxgl-ctrl-group {
-  border: 1px solid rgba(241, 241, 241, 0.15);
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(8px);
-}
-
-.cyber-map-canvas .mapboxgl-ctrl-group button {
-  filter: invert(1);
-}
-
 .cyber-map-shell .mapboxgl-ctrl-logo,
 .cyber-map-shell .mapboxgl-ctrl-attrib,
 .cyber-map-shell a.mapboxgl-ctrl-logo {
@@ -466,7 +455,7 @@ html.founder-story-open body {
   background: rgba(0, 0, 0, 0.72);
   padding: 0.45rem 0.9rem;
   font-size: 0.68rem;
-  font-weight: 600;
+  font-weight: 500;
   color: #f1f1f1;
   text-transform: uppercase;
   backdrop-filter: blur(6px);
@@ -506,22 +495,22 @@ html.founder-story-open body {
 
 .cyber-map-metro-marker__core {
   font-size: 0.62rem;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1;
   color: #f1f1f1;
 }
 
 .cyber-map-metro-marker__label {
-  max-width: 7rem;
   border-radius: 9999px;
   border: 1px solid rgba(241, 241, 241, 0.18);
   background: rgba(0, 0, 0, 0.72);
   padding: 0.35rem 0.65rem;
   text-align: center;
   font-size: 0.58rem;
-  font-weight: 600;
+  font-weight: 500;
   color: #d4d4d4;
   backdrop-filter: blur(6px);
+  white-space: nowrap;
 }
 
 /* One text size site-wide (0.81em root); overrides Tailwind arbitrary font sizes */

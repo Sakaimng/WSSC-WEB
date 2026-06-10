@@ -10,7 +10,7 @@ export const EXTERNAL_TICKETS_URL =
 export const EVENTBRITE_TICKETS_URL =
   "https://www.eventbrite.com/e/why-so-serious-comedy-stand-up-comedy-in-english-tickets-1889172488769?aff=erelpanelorg&utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQMMjU2MjgxMDQwNTU4AAGn-RdwSVqMOd-3X5bClsrGqGKfonkYnEM6R5U78KdSzw1cwfQSr8n4ifC9jJI_aem_kbLFCadW34AtcH9Emah11A";
 
-export const INSTAGRAM_URL = "https://www.instagram.com/why_so_serious_comedy/";
+export const INSTAGRAM_URL = "https://www.instagram.com/wsscomedy/";
 
 export const GOOGLE_MAPS_URL = "https://maps.app.goo.gl/XPFXGcdt8X4X2s526";
 

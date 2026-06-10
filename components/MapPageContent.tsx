@@ -49,7 +49,7 @@ export function MapPageContent() {
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
               <p className="text-xs font-semibold text-white">{t.map.eyebrow}</p>
-              <h1 className="mt-2 font-sans text-base font-semibold text-white">
+              <h1 className="mt-2 whitespace-nowrap font-sans text-base font-semibold text-white">
                 {t.map.title}
               </h1>
             </div>

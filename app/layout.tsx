@@ -19,8 +19,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full bg-black font-sans antialiased">
-      <body className="flex min-h-[100dvh] flex-col bg-black font-sans text-white">
+    <html
+      lang="en"
+      className="h-full bg-black font-sans antialiased"
+      suppressHydrationWarning
+    >
+      <body
+        className="flex min-h-[100dvh] flex-col bg-black font-sans text-white"
+        suppressHydrationWarning
+      >
         <SeoJsonLd />
         <LanguageProvider>
           <SmoothScroll />

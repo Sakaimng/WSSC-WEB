@@ -4,9 +4,16 @@ const nextConfig: NextConfig = {
   transpilePackages: ["mapbox-gl"],
   reactCompiler: true,
   images: {
-    formats: ["image/avif", "image/webp"],
-    deviceSizes: [640, 750, 1080, 1200, 1920, 2560, 3840, 6400],
-    qualities: [75, 90, 100],
+    formats: ["image/webp"],
+    minimumCacheTTL: 2678400,
+    localPatterns: [
+      { pathname: "/hero/**" },
+      { pathname: "/gallery/**" },
+      { pathname: "/PROFILE/**" },
+    ],
+    deviceSizes: [640, 750, 1080, 1280, 1920, 2560],
+    imageSizes: [96, 128, 256, 384],
+    qualities: [60, 75, 90],
   },
 };
 
