@@ -100,7 +100,7 @@ function NavBrandMark({ compact }: { compact: boolean }) {
   return (
     <span
       ref={brandShellRef}
-      className="relative inline-block overflow-hidden align-top"
+      className="relative inline-block overflow-hidden"
     >
       <span
         ref={brandFullRef}
@@ -228,23 +228,18 @@ export function SiteNav() {
   );
 
   const isHome = pathname === "/";
-  const brandPositionClassName =
-    "mobile-nav-brand left-1/2 block shrink-0 -translate-x-1/2 max-[1031px]:fixed max-[1031px]:z-[60] min-[1032px]:absolute min-[1032px]:top-1/2 min-[1032px]:z-auto min-[1032px]:-translate-y-1/2";
 
   return (
     <>
-    <header
-      className="fixed top-0 right-0 left-0 z-50 m-0 h-16 w-full bg-transparent p-0 transition-colors duration-300 ease-out sm:h-20"
-    >
-      <div className="relative h-full w-full">
-      <div className="relative box-border flex h-full w-full max-w-none items-center px-[2vw] min-[1032px]:justify-normal">
-        <div className="hidden min-w-0 flex-1 items-center justify-start gap-3 min-[1032px]:flex">
+    <header className="site-nav-header fixed top-0 right-0 left-0 z-50 m-0 w-full bg-transparent p-0 transition-colors duration-300 ease-out">
+      <div className="grid h-full w-full grid-cols-[1fr_auto_1fr] items-center px-[2vw]">
+        <div className="hidden min-w-0 items-center justify-start gap-3 min-[1032px]:flex">
           <LanguageToggle className="shrink-0" />
           {scheduleLink}
         </div>
 
         <div
-          className={brandPositionClassName}
+          className="site-nav-brand relative col-span-3 flex shrink-0 justify-center min-[1032px]:col-span-1"
           aria-label={isHome ? "Why So Serious Comedy home" : undefined}
         >
           <NavBrandMark compact={!isHome} />
@@ -256,7 +251,7 @@ export function SiteNav() {
             />
           ) : null}
         </div>
-        <div className="hidden min-w-0 flex-1 items-center justify-end gap-2 min-[1032px]:flex">
+        <div className="hidden min-w-0 items-center justify-end gap-2 min-[1032px]:flex">
           <nav
             className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 min-[1032px]:gap-x-4"
             aria-label={t.nav.mainLabel}
@@ -279,13 +274,12 @@ export function SiteNav() {
           </nav>
         </div>
       </div>
-      </div>
     </header>
 
     <nav
       ref={menuRef}
       id="mobile-menu"
-      className={`mobile-nav-sheet fixed inset-x-[2vw] z-50 max-h-[min(70dvh,calc(100dvh-var(--mobile-nav-pill-inset)-var(--mobile-nav-brand-top)-3rem))] overflow-x-hidden overflow-y-auto rounded-2xl border border-white/10 bg-black/95 shadow-[0_24px_48px_rgba(0,0,0,0.55)] backdrop-blur-md min-[1032px]:hidden ${
+      className={`mobile-nav-sheet fixed inset-x-[2vw] z-50 max-h-[min(70dvh,calc(100dvh-var(--mobile-nav-pill-inset)-var(--mobile-nav-header-height)-0.5rem))] overflow-x-hidden overflow-y-auto rounded-2xl border border-white/10 bg-black/95 shadow-[0_24px_48px_rgba(0,0,0,0.55)] backdrop-blur-md min-[1032px]:hidden ${
         menuOpen ? "overflow-y-auto" : "overflow-hidden"
       } ${menuOpen ? "pointer-events-auto" : "pointer-events-none"}`}
       style={{ bottom: "var(--mobile-nav-pill-inset)" }}

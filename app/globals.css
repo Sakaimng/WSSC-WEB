@@ -7,10 +7,16 @@
   --foreground: var(--site-white);
   --mobile-nav-pill-height: 3.25rem;
   --mobile-nav-pill-offset: 3vh;
-  --mobile-nav-brand-top: 3vh;
+  --mobile-nav-header-height: 4rem;
   --mobile-nav-pill-inset: calc(
     var(--mobile-nav-pill-offset) + var(--mobile-nav-pill-height) + 0.5rem + env(safe-area-inset-bottom, 0px)
   );
+}
+
+@media (min-width: 640px) {
+  :root {
+    --mobile-nav-header-height: 5rem;
+  }
 }
 
 @theme inline {
@@ -435,8 +441,8 @@ html.founder-story-open body {
   bottom: calc(var(--mobile-nav-pill-offset) + env(safe-area-inset-bottom, 0px));
 }
 
-.mobile-nav-brand {
-  top: var(--mobile-nav-brand-top);
+.site-nav-header {
+  height: var(--mobile-nav-header-height);
 }
 
 .mobile-nav-backdrop {
