@@ -3,12 +3,11 @@
 import gsap from "gsap";
 import {
   NavBurgerIcon,
-  NavFaviconW,
-  NavTicketIcon,
   NAV_PILL_ICON_CLASS,
 } from "@/components/MobileNavPillIcons";
 import { TransitionLink as Link } from "@/components/TransitionLink";
 import { TicketDropdown } from "@/components/TicketDropdown";
+import { LanguageToggle } from "@/components/LanguageToggle";
 import { useI18n } from "@/components/LanguageProvider";
 import {
   COMEDIAN_SIGNUP_FORM_URL,
@@ -16,104 +15,36 @@ import {
   INSTAGRAM_URL,
 } from "@/lib/config";
 import { getUpcomingShows, SHOW_TIME } from "@/lib/show-schedule";
-import { formatShowDate, languages, type Language } from "@/lib/i18n";
+import { formatShowDate } from "@/lib/i18n";
 import { usePathname } from "next/navigation";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 const links = [
   { href: "/", labelKey: "home" },
   { href: "/gallery", labelKey: "gallery" },
-  { href: "/map", labelKey: "map" },
   { href: "/about", labelKey: "about" },
 ] as const;
 
 const menuLinks = links.filter(({ href }) => href !== "/");
 
 const NAV_SITE_TITLE = "WHY SO SERIOUS COMEDY";
-const NAV_SITE_SHORT = "WSSC";
 
 const brandTextClassName =
-  "font-sans text-xs font-semibold uppercase leading-none text-white";
+  "font-sans text-xs font-bold uppercase leading-none text-white";
 
-function NavBrandMark({ compact }: { compact: boolean }) {
-  const brandShellRef = useRef<HTMLSpanElement>(null);
-  const brandFullRef = useRef<HTMLSpanElement>(null);
-  const brandCompactRef = useRef<HTMLSpanElement>(null);
-  const hasAnimatedBrandRef = useRef(false);
-  const brandWidthRef = useRef(0);
-
-  useLayoutEffect(() => {
-    const shell = brandShellRef.current;
-    const full = brandFullRef.current;
-    const compactEl = brandCompactRef.current;
-    if (!shell || !full || !compactEl) return;
-
-    const targetWidth = compact ? compactEl.offsetWidth : full.offsetWidth;
-
-    gsap.killTweensOf([shell, full, compactEl]);
-
-    if (!hasAnimatedBrandRef.current) {
-      hasAnimatedBrandRef.current = true;
-      brandWidthRef.current = targetWidth;
-      gsap.set(shell, { width: targetWidth });
-      gsap.set(full, { autoAlpha: compact ? 0 : 1, x: 0 });
-      gsap.set(compactEl, { autoAlpha: compact ? 1 : 0, x: 0 });
-      return;
-    }
-
-    const widthState = { width: brandWidthRef.current };
-
-    gsap
-      .timeline({ defaults: { ease: "power3.inOut" } })
-      .to(
-        widthState,
-        {
-          width: targetWidth,
-          duration: 0.5,
-          onUpdate: () => {
-            brandWidthRef.current = widthState.width;
-            gsap.set(shell, { width: widthState.width });
-          },
-        },
-        0,
-      )
-      .to(
-        full,
-        {
-          autoAlpha: compact ? 0 : 1,
-          duration: 0.28,
-          ease: "power2.out",
-        },
-        compact ? 0 : 0.16,
-      )
-      .to(
-        compactEl,
-        {
-          autoAlpha: compact ? 1 : 0,
-          duration: 0.28,
-          ease: "power2.out",
-        },
-        compact ? 0 : 0.16,
-      );
-  }, [compact]);
+function NavBrandMark({ variant = "header" }: { variant?: "header" | "pill" }) {
+  const className =
+    variant === "pill"
+      ? "font-sans text-[0.5rem] font-bold uppercase leading-none text-white min-[400px]:text-[0.55rem] sm:text-[0.62rem]"
+      : brandTextClassName;
 
   return (
     <span
-      ref={brandShellRef}
-      className="relative inline-block overflow-hidden"
+      className={`${className} inline-block whitespace-nowrap ${
+        variant === "pill" ? "max-w-full" : ""
+      }`}
     >
-      <span
-        ref={brandFullRef}
-        className={`${brandTextClassName} inline-block whitespace-nowrap`}
-      >
-        {NAV_SITE_TITLE}
-      </span>
-      <span
-        ref={brandCompactRef}
-        className={`${brandTextClassName} absolute top-0 left-0 inline-block whitespace-nowrap`}
-      >
-        {NAV_SITE_SHORT}
-      </span>
+      {NAV_SITE_TITLE}
     </span>
   );
 }
@@ -121,43 +52,6 @@ function NavBrandMark({ compact }: { compact: boolean }) {
 function isActiveRoute(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
   return pathname === href || pathname.startsWith(`${href}/`);
-}
-
-function LanguageToggle({ className = "" }: { className?: string }) {
-  const { language, setLanguage, t } = useI18n();
-
-  return (
-    <div
-      className={`backdrop-blur-md relative inline-flex min-w-[5.5rem] rounded-full border border-white/15 bg-white/[0.03] p-1 ${className}`}
-      aria-label={t.nav.toggleLabel}
-    >
-      <span
-        className="pointer-events-none absolute top-1 bottom-1 left-1 w-[calc((100%-8px)/2)] rounded-full bg-white shadow-sm transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
-        style={{
-          transform: language === "jp" ? "translateX(100%)" : "translateX(0)",
-        }}
-        aria-hidden
-      />
-      {languages.map((option) => {
-        const active = language === option;
-
-        return (
-          <button
-            key={option}
-            type="button"
-            aria-pressed={active}
-            aria-label={t.nav.languageNames[option]}
-            onClick={() => setLanguage(option as Language)}
-            className={`relative z-10 flex-1 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors duration-200 ${
-              active ? "text-black" : "text-neutral-400 hover:text-white"
-            }`}
-          >
-            {option === "jp" ? "JP" : "EN"}
-          </button>
-        );
-      })}
-    </div>
-  );
 }
 
 export function SiteNav() {
@@ -169,6 +63,7 @@ export function SiteNav() {
     ? formatShowDate(new Date(nextShow.year, nextShow.month, nextShow.day), language)
     : null;
   const menuRef = useRef<HTMLElement>(null);
+  const mobilePillRef = useRef<HTMLDivElement>(null);
   const previousPathnameRef = useRef(pathname);
   const hasAnimatedMenuRef = useRef(false);
 
@@ -221,7 +116,7 @@ export function SiteNav() {
   const scheduleLink = nextShow && nextShowDate && (
     <Link
       href="/schedule"
-      className="shrink-0 text-xs font-semibold text-white transition hover:text-white"
+      className="shrink-0 text-xs font-semibold text-white transition hover:text-white/80"
     >
       {scheduleLinkLabel}
     </Link>
@@ -231,10 +126,9 @@ export function SiteNav() {
 
   return (
     <>
-    <header className="site-nav-header fixed top-0 right-0 left-0 z-50 m-0 w-full bg-transparent p-0 transition-colors duration-300 ease-out">
+    <header className="site-nav-header fixed top-0 right-0 left-0 z-50 m-0 hidden w-full bg-black p-0 transition-colors duration-300 ease-out min-[1032px]:block">
       <div className="grid h-full w-full grid-cols-[1fr_auto_1fr] items-center px-[2vw]">
         <div className="hidden min-w-0 items-center justify-start gap-3 min-[1032px]:flex">
-          <LanguageToggle className="shrink-0" />
           {scheduleLink}
         </div>
 
@@ -242,7 +136,7 @@ export function SiteNav() {
           className="site-nav-brand relative col-span-3 flex shrink-0 justify-center min-[1032px]:col-span-1"
           aria-label={isHome ? "Why So Serious Comedy home" : undefined}
         >
-          <NavBrandMark compact={!isHome} />
+          <NavBrandMark />
           {!isHome ? (
             <Link
               href="/"
@@ -264,7 +158,7 @@ export function SiteNav() {
                   key={href}
                   href={href}
                   aria-current={active ? "page" : undefined}
-                  className="text-xs font-medium text-white transition hover:text-white"
+                  className="text-xs font-medium text-white transition hover:text-white/80"
                 >
                   {t.nav[labelKey]}
                 </Link>
@@ -276,23 +170,20 @@ export function SiteNav() {
       </div>
     </header>
 
-    <nav
-      ref={menuRef}
-      id="mobile-menu"
-      className={`mobile-nav-sheet fixed inset-x-[2vw] z-50 max-h-[min(70dvh,calc(100dvh-var(--mobile-nav-pill-inset)-var(--mobile-nav-header-height)-0.5rem))] overflow-x-hidden overflow-y-auto rounded-2xl border border-white/10 bg-black/95 shadow-[0_24px_48px_rgba(0,0,0,0.55)] backdrop-blur-md min-[1032px]:hidden ${
-        menuOpen ? "overflow-y-auto" : "overflow-hidden"
-      } ${menuOpen ? "pointer-events-auto" : "pointer-events-none"}`}
+    <div
+      className="fixed inset-x-0 z-50 px-[2vw] min-[1032px]:hidden"
       style={{ bottom: "var(--mobile-nav-pill-inset)" }}
-      aria-label={t.nav.mobileMainLabel}
-      aria-hidden={!menuOpen}
     >
-      <div className="flex flex-col gap-1 p-4">
-        <Link
-          href="/gallery"
-          className="mobile-menu-item block rounded-full bg-white px-3 py-3 text-center text-base font-semibold text-black transition hover:bg-neutral-200"
-        >
-          {t.home.seeRoom}
-        </Link>
+      <nav
+        ref={menuRef}
+        id="mobile-menu"
+        className={`mobile-nav-sheet mx-auto w-full max-w-md max-h-[min(70dvh,calc(100dvh-var(--mobile-nav-pill-inset)-0.5rem))] overflow-x-hidden overflow-y-auto rounded-2xl border border-white/10 bg-black/95 shadow-[0_24px_48px_rgba(0,0,0,0.55)] backdrop-blur-md ${
+          menuOpen ? "overflow-y-auto" : "overflow-hidden"
+        } ${menuOpen ? "pointer-events-auto" : "pointer-events-none"}`}
+        aria-label={t.nav.mobileMainLabel}
+        aria-hidden={!menuOpen}
+      >
+        <div className="flex flex-col gap-1 px-4 pt-6 pb-4">
         {menuLinks.map(({ href, labelKey }) => {
           const active = isActiveRoute(pathname, href);
 
@@ -349,12 +240,17 @@ export function SiteNav() {
             {t.footer.comedianSignup}
           </a>
         </div>
-      </div>
-    </nav>
+        <p className="mobile-menu-item pt-4 text-center text-xs text-neutral-500">
+          {t.footer.copyright}
+        </p>
+        </div>
+      </nav>
+    </div>
 
     <div className="mobile-nav-pill pointer-events-none fixed inset-x-0 z-[55] px-[2vw] min-[1032px]:hidden">
       <div
-        className="pointer-events-auto mx-auto grid w-full max-w-md grid-cols-3 items-center rounded-full border border-white/15 bg-black/85 px-3 py-2 shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-md"
+        ref={mobilePillRef}
+        className="pointer-events-auto mx-auto grid w-full max-w-md grid-cols-[auto_1fr_auto] items-center rounded-full border border-white/15 bg-black/85 px-3 py-2 shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-md"
       >
         <button
           type="button"
@@ -373,17 +269,13 @@ export function SiteNav() {
           href="/"
           aria-current={isHome ? "page" : undefined}
           aria-label={t.nav.home}
-          className="mobile-nav-pill__btn justify-self-center"
+          className="mobile-nav-pill__brand justify-self-center"
         >
-          <NavFaviconW className={NAV_PILL_ICON_CLASS} />
+          <NavBrandMark variant="pill" />
         </Link>
-        <Link
-          href="/tickets"
-          aria-label={t.tickets.defaultLabel}
-          className="mobile-nav-pill__btn justify-self-end"
-        >
-          <NavTicketIcon className={`${NAV_PILL_ICON_CLASS} mobile-nav-pill__icon--square`} />
-        </Link>
+        <div className="justify-self-end">
+          <TicketDropdown variant="island" pillAnchorRef={mobilePillRef} />
+        </div>
       </div>
     </div>
 

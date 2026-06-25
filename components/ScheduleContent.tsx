@@ -119,24 +119,21 @@ export function ScheduleContent() {
   return (
     <section
       ref={root}
-      className="schedule-page page-viewport flex w-full flex-col max-sm:pb-8 sm:min-h-0 sm:flex-1 sm:justify-center"
+      className="schedule-page page-viewport flex w-full flex-col items-center justify-center max-sm:pb-8 sm:min-h-0 sm:flex-1"
     >
-      <div className="schedule-reveal w-full shrink-0 opacity-0">
-        <p className="text-xs font-semibold text-neutral-500">
-          {t.schedule.eyebrow}
-        </p>
-        <h1 className="mt-3 max-w-5xl font-sans text-base font-semibold text-white">
+      <div className="schedule-reveal w-full max-w-5xl shrink-0 opacity-0">
+        <h1 className="text-center font-sans text-base font-semibold text-white">
           {t.schedule.title}
         </h1>
       </div>
 
-      <div className="mt-4 grid w-full min-w-0 shrink-0 gap-5 sm:mt-5 sm:max-h-[calc(100dvh-12rem)] sm:grid-cols-[0.6fr_1.4fr] sm:items-stretch lg:gap-5">
-        <div className="schedule-reveal relative z-10 flex h-full min-h-0 w-full min-w-0 flex-col opacity-0">
-          <div className="min-h-0 flex-1 space-y-2 overflow-y-auto lg:space-y-1.5">
+      <div className="mt-4 grid w-full max-w-5xl min-w-0 shrink-0 gap-5 sm:mt-5 sm:max-h-[calc(100dvh-12rem)] sm:grid-cols-[0.6fr_1.4fr] sm:items-stretch lg:gap-5">
+        <div className="schedule-reveal relative z-10 flex h-full min-h-0 w-full min-w-0 flex-col items-center text-center opacity-0 min-[1032px]:items-stretch min-[1032px]:text-left">
+          <div className="min-h-0 w-full max-w-md flex-1 space-y-2 overflow-y-auto min-[1032px]:max-w-none lg:space-y-1.5">
             {upcomingShows.map((show) => (
               <div
                 key={show.key}
-                className="flex w-full min-w-0 flex-col gap-2 pb-3 last:pb-0 sm:flex-row sm:items-center sm:justify-between sm:gap-4 lg:pb-2"
+                className="flex w-full min-w-0 flex-col items-center gap-2 pb-3 last:pb-0 min-[1032px]:flex-row min-[1032px]:items-center min-[1032px]:justify-between min-[1032px]:gap-4 lg:pb-2"
               >
                 <span className="text-sm font-medium text-white sm:min-w-0">
                   {formatShowDate(new Date(show.year, show.month, show.day), language)}
@@ -147,12 +144,12 @@ export function ScheduleContent() {
               </div>
             ))}
           </div>
-          <div className="relative z-30 mt-6 shrink-0 overflow-visible sm:mt-0">
+          <div className="relative z-30 mt-6 flex w-full max-w-md shrink-0 justify-center overflow-visible min-[1032px]:max-w-none min-[1032px]:justify-start sm:mt-0">
             <TicketDropdown label={t.schedule.ticketOptions} variant="wide" />
           </div>
         </div>
 
-        <article className="schedule-reveal relative z-0 flex h-full min-h-0 w-full min-w-0 flex-col opacity-0">
+        <article className="schedule-reveal relative z-0 hidden h-full min-h-0 w-full min-w-0 flex-col opacity-0 min-[1032px]:flex">
           <h2 className="shrink-0 font-sans text-xl font-semibold text-white lg:text-lg">
             {calendarMonth.title}
           </h2>

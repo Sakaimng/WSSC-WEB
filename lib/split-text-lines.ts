@@ -72,3 +72,36 @@ export function splitElementIntoLines(element: HTMLElement): () => void {
     element.className = originalClassName;
   };
 }
+
+/** Split text into per-character masks for staggered char reveals. */
+export function splitElementIntoChars(element: HTMLElement): () => void {
+  const originalHTML = element.innerHTML;
+  const originalClassName = element.className;
+  const text = element.textContent?.trim() ?? "";
+
+  if (!text) {
+    return () => {
+      element.innerHTML = originalHTML;
+      element.className = originalClassName;
+    };
+  }
+
+  element.replaceChildren();
+
+  for (const char of text) {
+    const mask = document.createElement("span");
+    mask.className = "split-char-mask";
+
+    const inner = document.createElement("span");
+    inner.className = "split-char-inner";
+    inner.textContent = char;
+
+    mask.appendChild(inner);
+    element.appendChild(mask);
+  }
+
+  return () => {
+    element.innerHTML = originalHTML;
+    element.className = originalClassName;
+  };
+}

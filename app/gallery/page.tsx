@@ -14,7 +14,7 @@ export default function GalleryPage() {
   const images = getGalleryImages();
 
   return (
-    <div className="page-viewport page-viewport--scroll pb-4">
+    <div className="page-viewport page-viewport--scroll pb-[var(--mobile-nav-pill-inset)] min-[1032px]:pb-4">
       
 
       {images.length === 0 ? (

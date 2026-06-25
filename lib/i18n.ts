@@ -60,6 +60,7 @@ export const i18n = {
       creativeDirectorImageAlt: "Creative director profile",
       creativeDirectorRole: "Creative Director",
       creativeDirectorName: "SKMNG",
+      creativeDirectorWebsiteLabel: "skmng.co",
       creativeDirectorIntro:
         "SKMNG, born in Hong Kong and currently based in Tokyo. centres on composition, silhouette, and above all, emotional resonance.",
       creativeDirectorStory: [
@@ -89,6 +90,7 @@ export const i18n = {
       instagram: "Instagram",
       googleMaps: "Google Maps",
       comedianSignup: "Comedian signup",
+      copyright: "© 2026 WSSCOMEDY / ALL RIGHTS RESERVED",
     },
     tickets: {
       defaultLabel: "Tickets",
@@ -201,6 +203,7 @@ export const i18n = {
       creativeDirectorImageAlt: "クリエイティブディレクターのプロフィール",
       creativeDirectorRole: "クリエイティブディレクター",
       creativeDirectorName: "SKMNG",
+      creativeDirectorWebsiteLabel: "skmng.co",
       creativeDirectorIntro:
         "SKMNGは香港生まれ、現在東京を拠点に活動。構成、シルエット、そして何よりも感情的な共鳴を軸に据えた作品をつくる。",
       creativeDirectorStory: [
@@ -230,6 +233,7 @@ export const i18n = {
       instagram: "Instagram",
       googleMaps: "Google Maps",
       comedianSignup: "コメディアン登録",
+      copyright: "© 2026 WSSCOMEDY / ALL RIGHTS RESERVED",
     },
     tickets: {
       defaultLabel: "チケット",

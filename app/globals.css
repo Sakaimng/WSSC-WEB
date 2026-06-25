@@ -5,17 +5,27 @@
   --site-white: #f1f1f1;
   --site-white-rgb: 241, 241, 241;
   --foreground: var(--site-white);
+  --site-root-font-size: 0.81em;
   --mobile-nav-pill-height: 3.25rem;
   --mobile-nav-pill-offset: 3vh;
-  --mobile-nav-header-height: 4rem;
-  --mobile-nav-pill-inset: calc(
-    var(--mobile-nav-pill-offset) + var(--mobile-nav-pill-height) + 0.5rem + env(safe-area-inset-bottom, 0px)
+  --mobile-nav-pill-bottom-margin: calc(
+    var(--mobile-nav-pill-offset) + env(safe-area-inset-bottom, 0px)
   );
+  --mobile-nav-header-height: 2.5rem;
+  --mobile-nav-pill-inset: calc(
+    var(--mobile-nav-pill-bottom-margin) + var(--mobile-nav-pill-height) + 0.5rem
+  );
+}
+
+@media (min-width: 1032px) {
+  :root {
+    --site-root-font-size: 0.72em;
+  }
 }
 
 @media (min-width: 640px) {
   :root {
-    --mobile-nav-header-height: 5rem;
+    --mobile-nav-header-height: 2.75rem;
   }
 }
 
@@ -44,12 +54,13 @@
   --font-weight-normal: 500;
   --font-weight-medium: 500;
   --font-weight-semibold: 500;
+  --font-weight-bold: 700;
 }
 
 html {
   height: 100%;
   background-color: #000000;
-  font-size: 0.81em;
+  font-size: var(--site-root-font-size);
   font-family: "Helvetica Neue", helvetica, arial, sans-serif;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -106,7 +117,7 @@ html.home-lock-scroll.lenis body {
 
 /* Japanese: slightly smaller root so CJK reads closer to Latin visual weight (Tailwind rem scales with this). */
 html:lang(ja) {
-  font-size: calc(0.81em * 0.9375);
+  font-size: calc(var(--site-root-font-size) * 0.9375);
   font-family:
     "Helvetica Neue",
     helvetica,
@@ -252,16 +263,6 @@ html.lenis body {
   object-position: 50% var(--hero-focus-y);
 }
 
-/* Vignette center = viewport center; object-position already places the mic there */
-.hero-bg-vignette {
-  background: radial-gradient(
-    ellipse 75% 65% at 50% 50%,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0.28) 34%,
-    rgba(0, 0, 0, 1) 100%
-  );
-}
-
 @media (max-aspect-ratio: 4/5) {
   .hero-bg-wrap {
     --hero-focus-y: 58%;
@@ -313,6 +314,16 @@ html.lenis body {
 }
 
 /* About portraits — avoid sub-pixel gaps at grid column edges */
+.about-page.page-viewport {
+  padding-top: var(--mobile-nav-pill-bottom-margin);
+}
+
+@media (min-width: 1032px) {
+  .about-page.page-viewport {
+    padding-top: 0;
+  }
+}
+
 .about-portrait-grid {
   isolation: isolate;
 }
@@ -382,6 +393,31 @@ html.founder-story-open body {
   outline-offset: 2px;
 }
 
+.mobile-nav-pill__brand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  max-width: 100%;
+  height: 2.75rem;
+  padding-inline: 0.75rem;
+  border-radius: 9999px;
+  color: #f1f1f1;
+  text-decoration: none;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.mobile-nav-pill__brand:hover {
+  background: rgba(241, 241, 241, 0.08);
+}
+
+.mobile-nav-pill__brand:focus-visible {
+  outline: 2px solid #f1f1f1;
+  outline-offset: 2px;
+}
+
 .mobile-nav-pill__icon {
   display: block;
   height: 1.1rem;
@@ -433,12 +469,51 @@ html.founder-story-open body {
   }
 }
 
+.split-char-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+}
+
+.split-char-inner {
+  display: inline-block;
+}
+
+.gallery-lightbox-close {
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+  padding: 0.5rem 0;
+  transition: opacity 0.2s ease;
+}
+
+.gallery-lightbox-close__label {
+  display: inline-block;
+}
+
+.gallery-lightbox-close:hover:not(:disabled) {
+  opacity: 0.65;
+}
+
+.gallery-lightbox-close--closing {
+  pointer-events: none;
+}
+
+.gallery-lightbox-close:focus-visible {
+  outline: 2px solid #f1f1f1;
+  outline-offset: 2px;
+}
+
+.gallery-lightbox-close:disabled {
+  cursor: default;
+}
+
 .mobile-nav-sheet {
   margin-bottom: 0.5rem;
 }
 
 .mobile-nav-pill {
-  bottom: calc(var(--mobile-nav-pill-offset) + env(safe-area-inset-bottom, 0px));
+  bottom: var(--mobile-nav-pill-bottom-margin);
 }
 
 .site-nav-header {

@@ -2,7 +2,6 @@
 
 import { useEffect, useLayoutEffect, useRef, useState, type RefObject } from "react";
 import { createPortal } from "react-dom";
-import { TransitionLink as Link } from "@/components/TransitionLink";
 import { EVENTBRITE_TICKETS_URL, EXTERNAL_TICKETS_URL } from "@/lib/config";
 import { useI18n } from "@/components/LanguageProvider";
 import { NavTicketIcon, NAV_PILL_ICON_CLASS } from "@/components/MobileNavPillIcons";
@@ -56,7 +55,7 @@ const dropdownItemClass = {
 } as const;
 
 const navButtonClass =
-  "relative z-10 rounded-full bg-black px-4 py-2 text-sm font-semibold text-white transition-colors duration-300 ease-out hover:bg-white hover:text-black";
+  "relative z-10 text-xs font-medium text-white transition hover:text-white/80";
 
 type MobileAnchor = {
   left: number;
@@ -180,8 +179,6 @@ export function TicketDropdown({ label, variant = "nav", pillAnchorRef }: Props)
       ? "w-full min-w-0 sm:min-w-48"
       : "min-w-48";
 
-  const usesRing = variant === "nav";
-
   const triggerLabel = label ?? t.tickets.defaultLabel;
   const triggerButton =
     variant === "island" ? (
@@ -202,26 +199,15 @@ export function TicketDropdown({ label, variant = "nav", pillAnchorRef }: Props)
         aria-expanded={open}
         onClick={() => setOpen((value) => !value)}
         className={`${
-          usesRing
-            ? navButtonClass
-            : variantClass[variant]
+          variant === "nav" ? navButtonClass : variantClass[variant]
         } cursor-pointer`}
       >
         {triggerLabel}
       </button>
     );
 
-  const ringWrapClassName = "hero-ring-wrap hero-ring-wrap--see-room shrink-0";
-
   const dropdownLinks = (itemVariant: keyof typeof dropdownItemClass) => (
     <>
-      <Link
-        href="/tickets"
-        className={dropdownItemClass[itemVariant]}
-        onClick={() => setOpen(false)}
-      >
-        {t.tickets.bookHere}
-      </Link>
       <a
         href={EXTERNAL_TICKETS_URL}
         target="_blank"
@@ -243,14 +229,7 @@ export function TicketDropdown({ label, variant = "nav", pillAnchorRef }: Props)
 
   return (
     <div ref={rootRef} className={`relative ${rootLayoutClass}`} data-ticket-dropdown>
-      {usesRing ? (
-        <div className={ringWrapClassName}>
-          <span aria-hidden className="hero-ring-light" />
-          {triggerButton}
-        </div>
-      ) : (
-        triggerButton
-      )}
+      {triggerButton}
 
       {variant !== "island" ? (
         <div

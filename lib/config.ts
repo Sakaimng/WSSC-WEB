@@ -17,6 +17,8 @@ export const GOOGLE_MAPS_URL = "https://maps.app.goo.gl/XPFXGcdt8X4X2s526";
 export const COMEDIAN_SIGNUP_FORM_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLSez1iKO8qEslYXnPWztk0AEYQbyeDRMYnVCjhWSJJCd_Np0YQ/viewform";
 
+export const CREATIVE_DIRECTOR_WEBSITE_URL = "https://skmng.co/";
+
 export const VENUE_NAME = "Moxy Tokyo Kinshicho";
 
 export const VENUE_STREET = "3-4-2 Kotobashi";

@@ -4,6 +4,7 @@ import gsap from "gsap";
 import Image, { type StaticImageData } from "next/image";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { CREATIVE_DIRECTOR_WEBSITE_URL } from "@/lib/config";
 import { useI18n } from "@/components/LanguageProvider";
 import { splitElementIntoLines } from "@/lib/split-text-lines";
 import founderPortrait from "../public/PROFILE/Founder Portrait.jpg";
@@ -24,6 +25,8 @@ type PortraitCardProps = {
   role: string;
   name: string;
   readStoryLabel: string;
+  personalSiteUrl?: string;
+  personalSiteLabel?: string;
   onReadStory: () => void;
 };
 
@@ -37,6 +40,8 @@ function AboutPortraitCard({
   role,
   name,
   readStoryLabel,
+  personalSiteUrl,
+  personalSiteLabel,
   onReadStory,
 }: PortraitCardProps) {
   return (
@@ -70,6 +75,17 @@ function AboutPortraitCard({
         <div className="flex min-w-0 flex-col items-end gap-1 text-right">
           <p className="text-xs font-semibold text-neutral-400">{role}</p>
           <p className="font-sans text-lg font-semibold text-white">{name}</p>
+          {personalSiteUrl && personalSiteLabel ? (
+            <a
+              href={personalSiteUrl}
+              target="_blank"
+              rel="noreferrer"
+              onClick={(event) => event.stopPropagation()}
+              className="pointer-events-auto text-xs font-semibold text-neutral-400 underline decoration-white/25 underline-offset-2 transition-colors hover:text-white hover:decoration-white/60"
+            >
+              {personalSiteLabel}
+            </a>
+          ) : null}
         </div>
       </div>
     </button>
@@ -184,7 +200,7 @@ export function AboutContent() {
   }, [storyMounted]);
 
   return (
-    <div ref={root} className="page-viewport">
+    <div ref={root} className="about-page page-viewport">
       <section className="flex flex-col sm:min-h-0 sm:flex-1 sm:justify-center sm:overflow-hidden">
         <div className="about-reveal flex w-full shrink-0 items-baseline justify-between gap-4 opacity-0">
           <p className="shrink-0 text-xs font-semibold text-white">
@@ -212,6 +228,8 @@ export function AboutContent() {
             role={t.about.creativeDirectorRole}
             name={t.about.creativeDirectorName}
             readStoryLabel={t.about.readStory}
+            personalSiteUrl={CREATIVE_DIRECTOR_WEBSITE_URL}
+            personalSiteLabel={t.about.creativeDirectorWebsiteLabel}
             onReadStory={openCreativeDirectorStory}
           />
         </div>
@@ -273,6 +291,18 @@ export function AboutContent() {
                         </p>
                       ))}
                     </div>
+                    {storySubject === "creativeDirector" ? (
+                      <p className="mt-8 text-left">
+                        <a
+                          href={CREATIVE_DIRECTOR_WEBSITE_URL}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-sm font-semibold text-white underline decoration-white/25 underline-offset-2 transition-colors hover:decoration-white/60"
+                        >
+                          {t.about.creativeDirectorWebsiteLabel}
+                        </a>
+                      </p>
+                    ) : null}
                   </div>
                 </div>
               </div>

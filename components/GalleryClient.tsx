@@ -1,8 +1,10 @@
 "use client";
 
+import gsap from "gsap";
 import Image from "next/image";
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { GalleryImage } from "@/lib/gallery-images";
+import { splitElementIntoChars } from "@/lib/split-text-lines";
 
 type Props = {
   images: GalleryImage[];
@@ -10,9 +12,11 @@ type Props = {
 
 export function GalleryClient({ images }: Props) {
   const [open, setOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  const titleId = useId();
   const thumbRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const closeLabelRef = useRef<HTMLSpanElement>(null);
+  const revertSplitRef = useRef<(() => void) | null>(null);
   const n = images.length;
   const activeImage = images[activeIndex];
 
@@ -24,7 +28,80 @@ export function GalleryClient({ images }: Props) {
     setActiveIndex((i) => (i + 1) % n);
   }, [n]);
 
-  const close = useCallback(() => setOpen(false), []);
+  const close = useCallback(() => {
+    setOpen(false);
+    setIsClosing(false);
+  }, []);
+
+  const closeWithAnimation = useCallback(() => {
+    if (isClosing) return;
+
+    const label = closeLabelRef.current;
+    if (!label) {
+      close();
+      return;
+    }
+
+    const inners = label.querySelectorAll<HTMLElement>(".split-char-inner");
+    if (inners.length === 0) {
+      close();
+      return;
+    }
+
+    setIsClosing(true);
+    gsap.killTweensOf(inners);
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      close();
+      return;
+    }
+
+    gsap.to(inners, {
+      y: "-110%",
+      autoAlpha: 0,
+      duration: 0.3,
+      stagger: 0.035,
+      ease: "power2.in",
+      onComplete: close,
+    });
+  }, [close, isClosing]);
+
+  useLayoutEffect(() => {
+    if (!open) return;
+
+    const label = closeLabelRef.current;
+    if (!label) return;
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    revertSplitRef.current = splitElementIntoChars(label);
+    const inners = label.querySelectorAll<HTMLElement>(".split-char-inner");
+
+    if (reduced) {
+      return () => {
+        revertSplitRef.current?.();
+        revertSplitRef.current = null;
+      };
+    }
+
+    const ctx = gsap.context(() => {
+      gsap.set(inners, { y: "110%", autoAlpha: 0 });
+      gsap.to(inners, {
+        y: "0%",
+        autoAlpha: 1,
+        duration: 0.42,
+        stagger: 0.045,
+        ease: "power3.out",
+        delay: 0.06,
+      });
+    }, label);
+
+    return () => {
+      ctx.revert();
+      revertSplitRef.current?.();
+      revertSplitRef.current = null;
+    };
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -75,13 +152,14 @@ export function GalleryClient({ images }: Props) {
 
   return (
     <>
-      <ul className="grid grid-cols-2 gap-px lg:grid-cols-3 [&:has(button:hover)_button:not(:hover)_img]:brightness-[0.35] [&:has(button:hover)_button:not(:hover)_.gallery-index]:opacity-40">
+      <ul className="grid grid-cols-2 gap-px lg:grid-cols-3 [&:has(button:hover)_button:not(:hover)_img]:brightness-[0.35]">
         {images.map((image, index) => (
           <li key={image.src}>
             <button
               type="button"
               onClick={() => {
                 setActiveIndex(index);
+                setIsClosing(false);
                 setOpen(true);
               }}
               className="group block w-full cursor-pointer overflow-hidden bg-neutral-950 p-0 text-left"
@@ -97,9 +175,6 @@ export function GalleryClient({ images }: Props) {
                   quality={75}
                   priority={index < 4}
                 />
-                <span className="gallery-index pointer-events-none absolute bottom-2 left-2 z-10 font-sans text-xs tabular-nums text-white/85">
-                  .{String(index + 1).padStart(2, "0")}
-                </span>
               </span>
             </button>
           </li>
@@ -108,23 +183,24 @@ export function GalleryClient({ images }: Props) {
 
       {open ? (
         <div
-          className="fixed inset-0 z-[300] flex flex-col bg-black/95"
+          className="fixed inset-0 z-[300] flex flex-col bg-black"
           role="dialog"
           aria-modal="true"
-          aria-labelledby={titleId}
+          aria-label="Gallery lightbox"
         >
-          <div className="flex shrink-0 items-center justify-between px-[2vw] py-4">
-            <p id={titleId} className="text-sm text-neutral-400">
-              <span className="text-white">{activeIndex + 1}</span>
-              <span className="text-neutral-600"> / </span>
-              {n}
-            </p>
+          <div className="flex shrink-0 items-center justify-end px-[2vw] py-4">
             <button
               type="button"
-              onClick={close}
-              className="rounded-full border border-white/20 px-4 py-2 text-sm font-medium text-white transition hover:border-white/40 hover:bg-white/10"
+              onClick={closeWithAnimation}
+              aria-label="Close"
+              disabled={isClosing}
+              className={`gallery-lightbox-close text-sm font-medium text-white ${
+                isClosing ? "gallery-lightbox-close--closing" : ""
+              }`}
             >
-              Close
+              <span ref={closeLabelRef} className="gallery-lightbox-close__label">
+                Close
+              </span>
             </button>
           </div>
 
@@ -183,7 +259,7 @@ export function GalleryClient({ images }: Props) {
             </button>
           </div>
 
-          <div className="shrink-0 border-t border-white/10 bg-black/60">
+          <div className="shrink-0 border-t border-white/10 bg-black">
             <div
               className="flex gap-2 overflow-x-auto px-[2vw] py-3 [scrollbar-width:thin]"
               style={{ scrollbarColor: "rgba(241,241,241,0.25) transparent" }}
