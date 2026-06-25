@@ -93,6 +93,7 @@ export const i18n = {
     tickets: {
       defaultLabel: "Tickets",
       openBoxOffice: "Open box office",
+      bookHere: "Book on WSSC",
       meetup: "Meetup",
       eventbrite: "Eventbrite",
     },
@@ -114,14 +115,37 @@ export const i18n = {
     ticketsPage: {
       title: "Tickets",
       description:
-        "Grab seats here or jump to our partner box office when that’s the smoother move at showtime.",
-      onsite: "On this site",
-      onsiteDescription:
-        "Hook your checkout provider (Stripe, Eventbrite embed, etc.) into this card when you’re ready. For now it’s a styled placeholder you can replace with a widget or form.",
-      checkoutSoon: "Checkout coming soon",
-      thirdParty: "Third-party box office",
-      thirdPartyDescription: "Choose the platform that works best for you.",
+        "Book upcoming shows and special nights directly here. Every order gets a unique door code by email after checkout.",
+      regularShow: "Regular show",
+      specialEvent: "Special event",
+      remaining: (count: number) =>
+        count === 1 ? "1 seat left" : `${count} seats left`,
+      soldOut: "Sold out",
+      priceLabel: (amount: number) => `¥${amount.toLocaleString("en-US")}`,
+      emailLabel: "Email",
+      nameLabel: "Name (optional)",
+      quantityLabel: "Tickets",
+      dateLabel: "Show date",
+      timeLabel: "Time",
+      availabilityLabel: "Availability",
+      bookButton: "Book with Stripe",
+      booking: "Redirecting to checkout…",
+      checkoutUnavailable:
+        "Online checkout is being wired up. Add your Stripe keys to enable booking.",
+      cancelled: "Checkout was cancelled. Your card was not charged.",
+      thirdPartyTitle: "Prefer a partner box office?",
+      thirdPartyDescription: "Meetup and Eventbrite are still available if that’s easier.",
       backHome: "Back home",
+      successTitle: "You’re booked",
+      successDescription:
+        "Save this code for the door. We also emailed it to you when checkout completed.",
+      successEmailNote: "Check your inbox for the same code.",
+      successPending:
+        "Payment received — your ticket code is being generated. Refresh in a moment.",
+      successMissing: "We couldn’t find that booking. If you were charged, contact us with your receipt.",
+      codeLabel: "Your door code",
+      quantityNote: (count: number) =>
+        count === 1 ? "1 ticket" : `${count} tickets`,
     },
   },
   jp: {
@@ -210,6 +234,7 @@ export const i18n = {
     tickets: {
       defaultLabel: "チケット",
       openBoxOffice: "チケットを見る",
+      bookHere: "WSSCで予約",
       meetup: "Meetup",
       eventbrite: "Eventbrite",
     },
@@ -230,14 +255,37 @@ export const i18n = {
     },
     ticketsPage: {
       title: "チケット",
-      description: "お好きなチケットプラットフォームから予約できます。",
-      onsite: "このサイト",
-      onsiteDescription:
-        "将来的にはここに決済フォームやチケットウィジェットを追加できます。",
-      checkoutSoon: "準備中",
-      thirdParty: "外部チケット",
-      thirdPartyDescription: "利用しやすいプラットフォームを選んでください。",
+      description:
+        "今後の公演やスペシャルイベントをこのサイトから予約できます。決済後、メールで入場コードが届きます。",
+      regularShow: "レギュラー公演",
+      specialEvent: "スペシャル公演",
+      remaining: (count: number) => `残り${count}席`,
+      soldOut: "売り切れ",
+      priceLabel: (amount: number) => `¥${amount.toLocaleString("ja-JP")}`,
+      emailLabel: "メールアドレス",
+      nameLabel: "お名前（任意）",
+      quantityLabel: "枚数",
+      dateLabel: "公演日",
+      timeLabel: "時間",
+      availabilityLabel: "空席",
+      bookButton: "Stripeで予約",
+      booking: "決済ページへ移動中…",
+      checkoutUnavailable:
+        "オンライン決済の準備中です。Stripeのキーを設定すると予約が有効になります。",
+      cancelled: "決済はキャンセルされました。カードへの請求はありません。",
+      thirdPartyTitle: "外部チケットを使う",
+      thirdPartyDescription: "MeetupやEventbriteからも予約できます。",
       backHome: "ホームへ戻る",
+      successTitle: "予約完了",
+      successDescription:
+        "入場時にこのコードを提示してください。決済完了後、同じコードをメールでもお送りしています。",
+      successEmailNote: "受信トレイもご確認ください。",
+      successPending:
+        "お支払いを確認しました。チケットコードを発行中です。少ししてから再読み込みしてください。",
+      successMissing:
+        "予約が見つかりませんでした。請求されている場合は、領収書とともにご連絡ください。",
+      codeLabel: "入場コード",
+      quantityNote: (count: number) => `${count}枚`,
     },
   },
 } as const;

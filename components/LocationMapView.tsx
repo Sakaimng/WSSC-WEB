@@ -354,7 +354,7 @@ export function LocationMapView({
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(241,241,241,0.1),transparent_42%)]" />
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 border-t border-white/10 bg-gradient-to-t from-black/92 via-black/80 to-transparent p-4">
+      <div className="map-venue-panel pointer-events-none absolute inset-x-0 z-20 border-t border-white/10 bg-gradient-to-t from-black/92 via-black/80 to-transparent p-4">
         <p className="text-[0.65rem] font-semibold uppercase tracking-wide text-neutral-500">
           {VENUE_NAME}
         </p>

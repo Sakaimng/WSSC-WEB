@@ -5,6 +5,12 @@
   --site-white: #f1f1f1;
   --site-white-rgb: 241, 241, 241;
   --foreground: var(--site-white);
+  --mobile-nav-pill-height: 3.25rem;
+  --mobile-nav-pill-offset: 3vh;
+  --mobile-nav-brand-top: 3vh;
+  --mobile-nav-pill-inset: calc(
+    var(--mobile-nav-pill-offset) + var(--mobile-nav-pill-height) + 0.5rem + env(safe-area-inset-bottom, 0px)
+  );
 }
 
 @theme inline {
@@ -344,16 +350,103 @@ html.founder-story-open body {
   text-transform: uppercase !important;
 }
 
-/* Mobile menu open: blur footer to match menu backdrop */
-@media (max-width: 1031px) {
-  html.mobile-menu-open .site-footer {
-    filter: blur(8px);
-    opacity: 0.55;
-    pointer-events: none;
-    transition:
-      filter 300ms ease,
-      opacity 300ms ease;
+/* Mobile bottom nav pill */
+.mobile-nav-pill__btn {
+  display: inline-flex;
+  height: 2.75rem;
+  width: 2.75rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 0;
+  background: transparent;
+  color: #f1f1f1;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.mobile-nav-pill__btn:hover {
+  background: rgba(241, 241, 241, 0.08);
+}
+
+.mobile-nav-pill__btn:focus-visible {
+  outline: 2px solid #f1f1f1;
+  outline-offset: 2px;
+}
+
+.mobile-nav-pill__icon {
+  display: block;
+  height: 1.1rem;
+  width: auto;
+}
+
+.mobile-nav-pill__icon--square {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.burger-icon {
+  overflow: visible;
+}
+
+.burger-icon__menu,
+.burger-icon__close {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    opacity 0.28s ease,
+    transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.burger-icon__menu {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+.burger-icon__close {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.82);
+}
+
+.burger-icon--open .burger-icon__menu {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.82);
+}
+
+.burger-icon--open .burger-icon__close {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .burger-icon__menu,
+  .burger-icon__close {
+    transition: none;
   }
+}
+
+.mobile-nav-sheet {
+  margin-bottom: 0.5rem;
+}
+
+.mobile-nav-pill {
+  bottom: calc(var(--mobile-nav-pill-offset) + env(safe-area-inset-bottom, 0px));
+}
+
+.mobile-nav-brand {
+  top: var(--mobile-nav-brand-top);
+}
+
+.mobile-nav-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+}
+
+html.mobile-menu-open [data-ticket-dropdown] {
+  z-index: 1;
 }
 
 /* Map page — fixed viewport height below nav (Mapbox needs non-zero size) */
@@ -378,6 +471,16 @@ html.founder-story-open body {
   height: 100%;
   min-height: 100%;
   width: 100%;
+}
+
+.map-venue-panel {
+  bottom: 0;
+}
+
+@media (max-width: 1031px) {
+  .map-venue-panel {
+    bottom: var(--mobile-nav-pill-inset);
+  }
 }
 
 /* Cyber location map (Mapbox) */

@@ -89,8 +89,8 @@ export function HomeHero() {
         <div className="hero-bg-vignette pointer-events-none absolute inset-0" aria-hidden />
       </div>
 
-      <div className="relative z-10 flex h-[100dvh] min-h-[100dvh] w-full flex-col justify-end overflow-visible px-[2vw] pb-14 pt-16 sm:pb-16 sm:pt-20">
-        <div className="relative z-20 shrink-0 overflow-visible">
+      <div className="relative z-10 flex h-[100dvh] min-h-[100dvh] w-full flex-col justify-end overflow-visible px-[2vw] pb-0 pt-16 min-[1032px]:justify-end min-[1032px]:pb-16 min-[1032px]:pt-20">
+        <div className="relative z-20 hidden shrink-0 overflow-visible min-[1032px]:block">
           <div className="flex w-full flex-col items-stretch gap-3 overflow-visible sm:flex-row sm:items-center sm:justify-center sm:gap-4">
             <div className="hero-cta-btn w-full sm:w-auto">
               <Link

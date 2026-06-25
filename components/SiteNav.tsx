@@ -1,11 +1,20 @@
 "use client";
 
 import gsap from "gsap";
-import { MobileMenuToggleLabel } from "@/components/MobileMenuToggleLabel";
+import {
+  NavBurgerIcon,
+  NavFaviconW,
+  NavTicketIcon,
+  NAV_PILL_ICON_CLASS,
+} from "@/components/MobileNavPillIcons";
 import { TransitionLink as Link } from "@/components/TransitionLink";
 import { TicketDropdown } from "@/components/TicketDropdown";
 import { useI18n } from "@/components/LanguageProvider";
-import { COMEDIAN_SIGNUP_FORM_URL } from "@/lib/config";
+import {
+  COMEDIAN_SIGNUP_FORM_URL,
+  GOOGLE_MAPS_URL,
+  INSTAGRAM_URL,
+} from "@/lib/config";
 import { getUpcomingShows, SHOW_TIME } from "@/lib/show-schedule";
 import { formatShowDate, languages, type Language } from "@/lib/i18n";
 import { usePathname } from "next/navigation";
@@ -17,6 +26,8 @@ const links = [
   { href: "/map", labelKey: "map" },
   { href: "/about", labelKey: "about" },
 ] as const;
+
+const menuLinks = links.filter(({ href }) => href !== "/");
 
 const NAV_SITE_TITLE = "WHY SO SERIOUS COMEDY";
 const NAV_SITE_SHORT = "WSSC";
@@ -181,8 +192,8 @@ export function SiteNav() {
 
     if (!hasAnimatedMenuRef.current) {
       hasAnimatedMenuRef.current = true;
-      gsap.set(menu, { height: 0, autoAlpha: 0 });
-      gsap.set(items, { autoAlpha: 0, y: -8 });
+      gsap.set(menu, { height: 0, autoAlpha: 0, y: 12 });
+      gsap.set(items, { autoAlpha: 0, y: 10 });
       return;
     }
 
@@ -191,7 +202,7 @@ export function SiteNav() {
     if (menuOpen) {
       gsap
         .timeline({ defaults: { ease: "power3.out" } })
-        .to(menu, { height: "auto", autoAlpha: 1, duration: 0.38 })
+        .to(menu, { height: "auto", autoAlpha: 1, y: 0, duration: 0.38 })
         .to(
           items,
           { autoAlpha: 1, y: 0, duration: 0.28, stagger: 0.045 },
@@ -202,8 +213,8 @@ export function SiteNav() {
 
     gsap
       .timeline({ defaults: { ease: "power2.inOut" } })
-      .to(items, { autoAlpha: 0, y: -6, duration: 0.16, stagger: 0.02 })
-      .to(menu, { height: 0, autoAlpha: 0, duration: 0.28 }, "-=0.08");
+      .to(items, { autoAlpha: 0, y: 8, duration: 0.16, stagger: 0.02 })
+      .to(menu, { height: 0, autoAlpha: 0, y: 12, duration: 0.28 }, "-=0.08");
   }, [menuOpen]);
 
   const scheduleLinkLabel = `${t.nav.next}: ${nextShowDate} · ${SHOW_TIME}`;
@@ -218,24 +229,22 @@ export function SiteNav() {
 
   const isHome = pathname === "/";
   const brandPositionClassName =
-    "block shrink-0 min-[1032px]:absolute min-[1032px]:top-1/2 min-[1032px]:left-1/2 min-[1032px]:-translate-x-1/2 min-[1032px]:-translate-y-1/2";
+    "mobile-nav-brand left-1/2 block shrink-0 -translate-x-1/2 max-[1031px]:fixed max-[1031px]:z-[60] min-[1032px]:absolute min-[1032px]:top-1/2 min-[1032px]:z-auto min-[1032px]:-translate-y-1/2";
 
   return (
     <>
     <header
-      className={`fixed top-0 right-0 left-0 z-50 m-0 h-16 w-full bg-transparent p-0 transition-colors duration-300 ease-out sm:h-20 ${
-        menuOpen ? "max-[1031px]:bg-black" : ""
-      }`}
+      className="fixed top-0 right-0 left-0 z-50 m-0 h-16 w-full bg-transparent p-0 transition-colors duration-300 ease-out sm:h-20"
     >
       <div className="relative h-full w-full">
-      <div className="relative box-border flex h-full w-full max-w-none items-center justify-between px-[2vw] min-[1032px]:justify-normal">
+      <div className="relative box-border flex h-full w-full max-w-none items-center px-[2vw] min-[1032px]:justify-normal">
         <div className="hidden min-w-0 flex-1 items-center justify-start gap-3 min-[1032px]:flex">
           <LanguageToggle className="shrink-0" />
           {scheduleLink}
         </div>
 
         <div
-          className={`${brandPositionClassName} relative`}
+          className={brandPositionClassName}
           aria-label={isHome ? "Why So Serious Comedy home" : undefined}
         >
           <NavBrandMark compact={!isHome} />
@@ -247,19 +256,9 @@ export function SiteNav() {
             />
           ) : null}
         </div>
-        <div className="flex items-center justify-end gap-2 min-[1032px]:flex-1">
-          <button
-            type="button"
-            className="inline-flex shrink-0 items-center justify-center overflow-hidden px-1 py-2 text-xs font-semibold text-white transition hover:text-neutral-300 min-[1032px]:hidden"
-            aria-controls="mobile-menu"
-            aria-expanded={menuOpen}
-            aria-label={menuOpen ? t.nav.menuClose : t.nav.menu}
-            onClick={() => setMenuOpen((open) => !open)}
-          >
-            <MobileMenuToggleLabel open={menuOpen} />
-          </button>
+        <div className="hidden min-w-0 flex-1 items-center justify-end gap-2 min-[1032px]:flex">
           <nav
-            className="hidden min-[1032px]:flex flex-wrap items-center justify-end gap-x-3 gap-y-1 min-[1032px]:gap-x-4"
+            className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 min-[1032px]:gap-x-4"
             aria-label={t.nav.mainLabel}
           >
             {links.map(({ href, labelKey }) => {
@@ -280,64 +279,125 @@ export function SiteNav() {
           </nav>
         </div>
       </div>
-      <nav
-        ref={menuRef}
-        id="mobile-menu"
-        className={`absolute top-full right-0 left-0 z-[45] max-h-[min(85dvh,calc(100dvh-4rem))] overflow-x-hidden overflow-y-auto bg-black/95 px-[2vw] shadow-[0_24px_48px_rgba(0,0,0,0.55)] backdrop-blur-md sm:max-h-[min(85dvh,calc(100dvh-5rem))] min-[1032px]:hidden ${
-          menuOpen ? "overflow-y-auto" : "overflow-hidden"
-        } ${menuOpen ? "pointer-events-auto" : "pointer-events-none"}`}
-        aria-label={t.nav.mobileMainLabel}
-        aria-hidden={!menuOpen}
-      >
-        <div className="flex flex-col gap-1 py-5">
-          {links.map(({ href, labelKey }) => {
-            const active = isActiveRoute(pathname, href);
+      </div>
+    </header>
 
-            return (
-              <Link
-                key={href}
-                href={href}
-                aria-current={active ? "page" : undefined}
-                className="mobile-menu-item block rounded-lg px-3 py-3 text-base font-medium text-white transition hover:bg-white/10 hover:text-white"
-              >
-                {t.nav[labelKey]}
-              </Link>
-            );
-          })}
-          {nextShow && nextShowDate ? (
+    <nav
+      ref={menuRef}
+      id="mobile-menu"
+      className={`mobile-nav-sheet fixed inset-x-[2vw] z-50 max-h-[min(70dvh,calc(100dvh-var(--mobile-nav-pill-inset)-var(--mobile-nav-brand-top)-3rem))] overflow-x-hidden overflow-y-auto rounded-2xl border border-white/10 bg-black/95 shadow-[0_24px_48px_rgba(0,0,0,0.55)] backdrop-blur-md min-[1032px]:hidden ${
+        menuOpen ? "overflow-y-auto" : "overflow-hidden"
+      } ${menuOpen ? "pointer-events-auto" : "pointer-events-none"}`}
+      style={{ bottom: "var(--mobile-nav-pill-inset)" }}
+      aria-label={t.nav.mobileMainLabel}
+      aria-hidden={!menuOpen}
+    >
+      <div className="flex flex-col gap-1 p-4">
+        <Link
+          href="/gallery"
+          className="mobile-menu-item block rounded-full bg-white px-3 py-3 text-center text-base font-semibold text-black transition hover:bg-neutral-200"
+        >
+          {t.home.seeRoom}
+        </Link>
+        {menuLinks.map(({ href, labelKey }) => {
+          const active = isActiveRoute(pathname, href);
+
+          return (
             <Link
-              href="/schedule"
-              className="mobile-menu-item block rounded-lg px-3 py-3 text-sm font-medium text-neutral-300 transition hover:bg-white/10 hover:text-white"
+              key={href}
+              href={href}
+              aria-current={active ? "page" : undefined}
+              className="mobile-menu-item block rounded-lg px-3 py-3 text-base font-medium text-white transition hover:bg-white/10 hover:text-white"
             >
-              <span className="block text-xs text-neutral-500">
-                {t.nav.nextShow}
-              </span>
-              <span className="mt-1 block text-white">
-                {nextShowDate} · {SHOW_TIME}
-              </span>
+              {t.nav[labelKey]}
             </Link>
-          ) : null}
-          <div className="mobile-menu-item py-2">
-            <LanguageToggle />
-          </div>
-          <TicketDropdown variant="mobile" />
+          );
+        })}
+        {nextShow && nextShowDate ? (
+          <Link
+            href="/schedule"
+            className="mobile-menu-item block rounded-lg px-3 py-3 text-sm font-medium text-neutral-300 transition hover:bg-white/10 hover:text-white"
+          >
+            <span className="block text-xs text-neutral-500">
+              {t.nav.nextShow}
+            </span>
+            <span className="mt-1 block text-white">
+              {nextShowDate} · {SHOW_TIME}
+            </span>
+          </Link>
+        ) : null}
+        <div className="mobile-menu-item py-2">
+          <LanguageToggle />
+        </div>
+        <div className="mobile-menu-item mt-1 flex flex-col gap-1 border-t border-white/10 pt-3">
+          <a
+            href={INSTAGRAM_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="block rounded-lg px-3 py-3 text-base font-medium text-white transition hover:bg-white/10 hover:text-white"
+          >
+            {t.footer.instagram}
+          </a>
+          <a
+            href={GOOGLE_MAPS_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="block rounded-lg px-3 py-3 text-base font-medium text-white transition hover:bg-white/10 hover:text-white"
+          >
+            {t.footer.googleMaps}
+          </a>
           <a
             href={COMEDIAN_SIGNUP_FORM_URL}
             target="_blank"
             rel="noreferrer"
-            className="mobile-menu-item mt-1 block rounded-lg px-3 py-3 text-base font-medium text-neutral-300 transition hover:bg-white/10 hover:text-white"
+            className="block rounded-lg px-3 py-3 text-base font-medium text-neutral-300 transition hover:bg-white/10 hover:text-white"
           >
             {t.footer.comedianSignup}
           </a>
         </div>
-      </nav>
       </div>
-    </header>
+    </nav>
+
+    <div className="mobile-nav-pill pointer-events-none fixed inset-x-0 z-[55] px-[2vw] min-[1032px]:hidden">
+      <div
+        className="pointer-events-auto mx-auto grid w-full max-w-md grid-cols-3 items-center rounded-full border border-white/15 bg-black/85 px-3 py-2 shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-md"
+      >
+        <button
+          type="button"
+          className="mobile-nav-pill__btn justify-self-start"
+          aria-controls="mobile-menu"
+          aria-expanded={menuOpen}
+          aria-label={menuOpen ? t.nav.menuClose : t.nav.menu}
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          <NavBurgerIcon
+            open={menuOpen}
+            className={`${NAV_PILL_ICON_CLASS} mobile-nav-pill__icon--square`}
+          />
+        </button>
+        <Link
+          href="/"
+          aria-current={isHome ? "page" : undefined}
+          aria-label={t.nav.home}
+          className="mobile-nav-pill__btn justify-self-center"
+        >
+          <NavFaviconW className={NAV_PILL_ICON_CLASS} />
+        </Link>
+        <Link
+          href="/tickets"
+          aria-label={t.tickets.defaultLabel}
+          className="mobile-nav-pill__btn justify-self-end"
+        >
+          <NavTicketIcon className={`${NAV_PILL_ICON_CLASS} mobile-nav-pill__icon--square`} />
+        </Link>
+      </div>
+    </div>
+
     <button
       type="button"
       aria-label="Close mobile menu"
       onClick={() => setMenuOpen(false)}
-      className={`fixed inset-x-0 bottom-0 top-16 z-40 bg-black/45 backdrop-blur-3xl transition duration-300 sm:top-20 min-[1032px]:hidden ${
+      className={`mobile-nav-backdrop bg-black/45 backdrop-blur-3xl transition duration-300 min-[1032px]:hidden ${
         menuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
       }`}
     />

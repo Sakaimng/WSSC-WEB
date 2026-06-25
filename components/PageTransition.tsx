@@ -117,10 +117,10 @@ export function PageTransition({ children }: Props) {
           pathname === "/"
             ? "min-h-0 overflow-hidden bg-transparent pt-0 pb-0"
             : isGallery
-              ? "min-h-[100dvh] h-auto overflow-x-clip overflow-y-visible bg-black pt-16 pb-11 sm:h-[100dvh] sm:max-h-[100dvh] sm:overflow-hidden sm:pt-20 sm:pb-12"
+              ? "min-h-[100dvh] h-auto overflow-x-clip overflow-y-visible bg-black pt-16 pb-[var(--mobile-nav-pill-inset)] min-[1032px]:h-[100dvh] min-[1032px]:max-h-[100dvh] min-[1032px]:overflow-hidden min-[1032px]:pt-20 min-[1032px]:pb-12"
               : isMap
-                ? "box-border h-[100dvh] max-h-[100dvh] overflow-hidden bg-black pt-16 pb-0 sm:pt-20"
-                : "min-h-[100dvh] h-auto overflow-x-clip overflow-y-visible bg-black pt-16 pb-11 sm:h-[100dvh] sm:max-h-[100dvh] sm:overflow-hidden sm:pt-20 sm:pb-12"
+                ? "box-border h-[100dvh] max-h-[100dvh] overflow-hidden bg-black pt-16 pb-0 min-[1032px]:pt-20"
+                : "min-h-[100dvh] h-auto overflow-x-clip overflow-y-visible bg-black pt-16 pb-[var(--mobile-nav-pill-inset)] min-[1032px]:h-[100dvh] min-[1032px]:max-h-[100dvh] min-[1032px]:overflow-hidden min-[1032px]:pt-20 min-[1032px]:pb-12"
         }`}
       >
         <div
