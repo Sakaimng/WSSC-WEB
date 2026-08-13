@@ -107,6 +107,8 @@ export function PageTransition({ children }: Props) {
 
   const isGallery =
     pathname === "/gallery" || pathname.startsWith("/gallery/");
+  const isMerch = pathname === "/merch" || pathname.startsWith("/merch/");
+  const isLongPage = isGallery || isMerch;
   const isMap = pathname === "/map";
 
   return (
@@ -116,6 +118,8 @@ export function PageTransition({ children }: Props) {
         className={`box-border flex flex-1 flex-col ${
           pathname === "/"
             ? "min-h-0 overflow-hidden bg-transparent pt-0 pb-0"
+            : isMerch
+              ? "min-h-[100dvh] h-auto overflow-x-clip overflow-y-visible bg-white pt-0 pb-0 min-[1032px]:pt-[var(--mobile-nav-header-height)]"
             : isGallery
               ? "min-h-[100dvh] h-auto overflow-x-clip overflow-y-visible bg-black pt-0 pb-0 min-[1032px]:pt-[var(--mobile-nav-header-height)] min-[1032px]:pb-12"
               : isMap
@@ -130,7 +134,7 @@ export function PageTransition({ children }: Props) {
               ? "h-[100dvh] min-h-0 overflow-hidden"
               : isMap
                 ? "h-full min-h-0 flex-1 overflow-hidden"
-                : isGallery
+                : isLongPage
                   ? "h-auto overflow-visible"
                   : "h-auto overflow-visible sm:h-full sm:overflow-hidden"
           }`}

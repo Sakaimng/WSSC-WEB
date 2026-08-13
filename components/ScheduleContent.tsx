@@ -127,7 +127,7 @@ export function ScheduleContent() {
         </h1>
       </div>
 
-      <div className="mt-4 grid w-full max-w-5xl min-w-0 shrink-0 gap-5 sm:mt-5 sm:max-h-[calc(100dvh-12rem)] sm:grid-cols-[0.6fr_1.4fr] sm:items-stretch lg:gap-5">
+      <div className="mt-4 grid w-full max-w-5xl min-w-0 shrink-0 gap-5 sm:mt-5 sm:max-h-[calc(100dvh-12rem)] min-[1032px]:grid-cols-[0.6fr_1.4fr] min-[1032px]:items-stretch lg:gap-5">
         <div className="schedule-reveal relative z-10 flex h-full min-h-0 w-full min-w-0 flex-col items-center text-center opacity-0 min-[1032px]:items-stretch min-[1032px]:text-left">
           <div className="min-h-0 w-full max-w-md flex-1 space-y-2 overflow-y-auto min-[1032px]:max-w-none lg:space-y-1.5">
             {upcomingShows.map((show) => (
@@ -144,7 +144,7 @@ export function ScheduleContent() {
               </div>
             ))}
           </div>
-          <div className="relative z-30 mt-6 flex w-full max-w-md shrink-0 justify-center overflow-visible min-[1032px]:max-w-none min-[1032px]:justify-start sm:mt-0">
+          <div className="relative z-30 mt-6 flex w-full max-w-md shrink-0 justify-center overflow-visible min-[1032px]:mt-0 min-[1032px]:max-w-none min-[1032px]:justify-start">
             <TicketDropdown label={t.schedule.ticketOptions} variant="wide" />
           </div>
         </div>

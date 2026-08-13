@@ -22,6 +22,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 const links = [
   { href: "/", labelKey: "home" },
   { href: "/gallery", labelKey: "gallery" },
+  { href: "/merch", labelKey: "merch" },
   { href: "/about", labelKey: "about" },
 ] as const;
 

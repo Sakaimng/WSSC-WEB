@@ -12,6 +12,9 @@ export const EVENTBRITE_TICKETS_URL =
 
 export const INSTAGRAM_URL = "https://www.instagram.com/wsscomedy/";
 
+export const MERCH_CONTACT_URL =
+  "https://checkout.square.site/merchant/MLEN13J2Q870X/checkout/JPLWNZJHIZLV5W4IUELGOGVJ";
+
 export const GOOGLE_MAPS_URL = "https://maps.app.goo.gl/XPFXGcdt8X4X2s526";
 
 export const COMEDIAN_SIGNUP_FORM_URL =
