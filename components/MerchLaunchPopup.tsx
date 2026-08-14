@@ -9,6 +9,7 @@ import capFront from "../E-C/WhatsApp Image 2026-08-12 at 18.45.02 (1).jpeg";
 
 const REVEAL_DELAY_MS = 450;
 const EXIT_DURATION_MS = 300;
+const SESSION_KEY = "wssc-merch-launch-seen";
 
 export function MerchLaunchPopup() {
   const { t } = useI18n();
@@ -28,6 +29,12 @@ export function MerchLaunchPopup() {
   }, []);
 
   useEffect(() => {
+    try {
+      if (window.sessionStorage.getItem(SESSION_KEY) === "1") return;
+    } catch {
+      // Keep the popup functional when session storage is unavailable.
+    }
+
     let active = true;
     let queued = false;
     let revealTimer: number | null = null;
@@ -39,6 +46,11 @@ export function MerchLaunchPopup() {
 
       revealTimer = window.setTimeout(() => {
         if (!active) return;
+        try {
+          window.sessionStorage.setItem(SESSION_KEY, "1");
+        } catch {
+          // The popup can still display without persistence.
+        }
         setMounted(true);
         window.requestAnimationFrame(() => {
           if (active) setVisible(true);
