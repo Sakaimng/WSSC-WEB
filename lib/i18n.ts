@@ -101,7 +101,13 @@ export const i18n = {
       popupPrice: "¥3,980",
       popupBody: "Tax included. Available now.",
       popupCta: "View the cap",
-      popupClose: "Close merch announcement",
+      popupClose: "Close announcement",
+      tourPopupEyebrow: "Press / Tour 2026",
+      tourPopupTitle: "Tokyo, Osaka & Kyoto Tour",
+      tourPopupPrice: "Sep 2 – 16, 2026",
+      tourPopupBody:
+        "Five English stand-up shows at Moxy hotels in Tokyo, Osaka, and Kyoto.",
+      tourPopupCta: "Read the press release",
     },
     schedule: {
       eyebrow: "Schedule",
@@ -278,7 +284,13 @@ export const i18n = {
       popupPrice: "¥3,980",
       popupBody: "税込。発売中。",
       popupCta: "キャップを見る",
-      popupClose: "グッズのお知らせを閉じる",
+      popupClose: "お知らせを閉じる",
+      tourPopupEyebrow: "プレス / ツアー 2026",
+      tourPopupTitle: "TOKYO, OSAKA & KYOTO TOUR",
+      tourPopupPrice: "2026年9月2日–16日",
+      tourPopupBody:
+        "東京・大阪・京都のモクシーホテル全5公演。英語スタンドアップコメディ。",
+      tourPopupCta: "プレスリリースを読む",
     },
     schedule: {
       eyebrow: "スケジュール",

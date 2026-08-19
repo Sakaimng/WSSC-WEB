@@ -22,6 +22,9 @@ export const COMEDIAN_SIGNUP_FORM_URL =
 
 export const CREATIVE_DIRECTOR_WEBSITE_URL = "https://skmng.co/";
 
+export const TOUR_PRESS_URL =
+  "https://prtimes.jp/main/html/rd/p/000002802.000011305.html";
+
 export const VENUE_NAME = "Moxy Tokyo Kinshicho";
 
 export const VENUE_STREET = "3-4-2 Kotobashi";
