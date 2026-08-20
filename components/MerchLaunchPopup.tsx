@@ -6,7 +6,7 @@ import { useI18n } from "@/components/LanguageProvider";
 import { PAGE_PRELOADER_DONE_EVENT } from "@/components/PagePreloader";
 import { TransitionLink as Link } from "@/components/TransitionLink";
 import { TOUR_PRESS_URL } from "@/lib/config";
-import capFront from "../E-C/WhatsApp Image 2026-08-12 at 18.45.02 (1).jpeg";
+import capFront from "../E-C/L1071508-Edit.jpg";
 import founderPortrait from "../public/PROFILE/Founder Portrait.jpg";
 
 const REVEAL_DELAY_MS = 450;

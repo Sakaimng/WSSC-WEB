@@ -4,16 +4,20 @@ import Image from "next/image";
 import { Fragment } from "react";
 import { useI18n } from "@/components/LanguageProvider";
 import { MERCH_CONTACT_URL } from "@/lib/config";
-import capFront from "../E-C/WhatsApp Image 2026-08-12 at 18.45.01.jpeg";
-import capBack from "../E-C/WhatsApp Image 2026-08-12 at 18.45.02.jpeg";
+import capHero from "../E-C/L1071508-Edit.jpg";
+import capFront from "../E-C/L1071764-Edit.jpg";
+import capBack from "../E-C/L1071769-Edit.jpg";
+import capSide from "../E-C/L1071776-Edit.jpg";
+import capTop from "../E-C/L1071772-Edit.jpg";
 import capDetailOne from "../E-C/L1071497-Edit.jpg";
-import capDetailTwo from "../E-C/L1071492.jpg";
-import capDetailThree from "../E-C/WhatsApp Image 2026-08-12 at 18.45.02 (1).jpeg";
+import capDetailTwo from "../E-C/L1071492-Edit.jpg";
 
 const productImages = [
-  capDetailThree,
+  capHero,
   capFront,
   capBack,
+  capSide,
+  capTop,
   capDetailOne,
   capDetailTwo,
 ] as const;
