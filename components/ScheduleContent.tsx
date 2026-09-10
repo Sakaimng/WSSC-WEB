@@ -20,14 +20,24 @@ type CalendarDay = {
   eventLabel: string | null;
 };
 
-function translateShowLabel(
-  label: string | null,
-  labels: Record<"week1Wed" | "week2Fri" | "week3Wed" | "week4Fri", string>,
-) {
+type ShowLabels = {
+  week1Wed: string;
+  week2Fri: string;
+  week3Wed: string;
+  week4Fri: string;
+  osakaHonmachi: string;
+  kyoto: string;
+  osakaUmeda: string;
+};
+
+function translateShowLabel(label: string | null, labels: ShowLabels) {
   if (label === "Week 1 Wed") return labels.week1Wed;
   if (label === "Week 2 Fri") return labels.week2Fri;
   if (label === "Week 3 Wed") return labels.week3Wed;
   if (label === "Week 4 Fri") return labels.week4Fri;
+  if (label === "Osaka Honmachi") return labels.osakaHonmachi;
+  if (label === "Kyoto") return labels.kyoto;
+  if (label === "Osaka Umeda") return labels.osakaUmeda;
   return label;
 }
 
@@ -36,7 +46,7 @@ function buildCalendarMonth(
   month: number,
   today: TokyoDate,
   language: Language,
-  eventLabels: Record<"week1Wed" | "week2Fri" | "week3Wed" | "week4Fri", string>,
+  eventLabels: ShowLabels,
 ) {
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();

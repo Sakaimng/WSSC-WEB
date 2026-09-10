@@ -15,6 +15,16 @@ export type UpcomingShow = {
 
 export const SHOW_TIME = "9:00 PM";
 
+/**
+ * Extra tour dates (0-based month). These override the regular Kinshicho
+ * cadence when they fall on the same day.
+ */
+export const TOUR_SHOWS = [
+  { year: 2026, month: 8, day: 11, label: "Osaka Honmachi" },
+  { year: 2026, month: 8, day: 12, label: "Kyoto" },
+  { year: 2026, month: 8, day: 13, label: "Osaka Umeda" },
+] as const;
+
 /** Asia/Tokyo wall time; matches {@link SHOW_TIME} (9:00 PM). */
 export const SHOW_START_HOUR_TOKYO = 21;
 export const SHOW_START_MINUTE_TOKYO = 0;
@@ -285,6 +295,11 @@ function getScheduledShowDays(year: number, month: number) {
 }
 
 export function getEventLabel(year: number, month: number, day: number) {
+  const tour = TOUR_SHOWS.find(
+    (show) => show.year === year && show.month === month && show.day === day,
+  );
+  if (tour) return tour.label;
+
   const { week1Wed, week2Fri, week3Wed, week4Fri } = getScheduledShowDays(
     year,
     month,

@@ -27,6 +27,42 @@ function parseShowEventId(eventId: string) {
   };
 }
 
+function ticketCopyForShow(label: string) {
+  if (label === "Osaka Honmachi") {
+    return {
+      title: "Why So Serious Comedy — Osaka",
+      titleJp: "Why So Serious Comedy — 大阪本町",
+      description: "English stand-up at Moxy Osaka Honmachi.",
+      descriptionJp: "モクシー大阪本町での英語スタンドアップコメディ。",
+    };
+  }
+
+  if (label === "Kyoto") {
+    return {
+      title: "Why So Serious Comedy — Kyoto",
+      titleJp: "Why So Serious Comedy — 京都",
+      description: "English stand-up at Moxy Kyoto.",
+      descriptionJp: "モクシー京都での英語スタンドアップコメディ。",
+    };
+  }
+
+  if (label === "Osaka Umeda") {
+    return {
+      title: "Why So Serious Comedy — Osaka Umeda",
+      titleJp: "Why So Serious Comedy — 大阪梅田",
+      description: "English stand-up at Moxy Osaka Umeda.",
+      descriptionJp: "モクシー大阪梅田での英語スタンドアップコメディ。",
+    };
+  }
+
+  return {
+    title: "Why So Serious Comedy",
+    titleJp: "Why So Serious Comedy",
+    description: "English stand-up at Moxy Tokyo Kinshicho.",
+    descriptionJp: "モクシー東京錦糸町での英語スタンドアップコメディ。",
+  };
+}
+
 export async function getBookableEvents(
   language: Language = "en",
   showCount = 8,
@@ -41,14 +77,15 @@ export async function getBookableEvents(
     const sold = await getPaidQuantityForEvent(id);
     const capacity = DEFAULT_SHOW_CAPACITY;
     const remaining = Math.max(capacity - sold, 0);
+    const copy = ticketCopyForShow(show.label);
 
     showEvents.push({
       id,
       kind: "show",
-      title: "Why So Serious Comedy",
-      titleJp: "Why So Serious Comedy",
-      description: "English stand-up at Moxy Tokyo Kinshicho.",
-      descriptionJp: "モクシー東京錦糸町での英語スタンドアップコメディ。",
+      title: copy.title,
+      titleJp: copy.titleJp,
+      description: copy.description,
+      descriptionJp: copy.descriptionJp,
       dateIso: `${show.year}-${String(show.month + 1).padStart(2, "0")}-${String(show.day).padStart(2, "0")}`,
       dateLabel: show.date,
       time: SHOW_TIME,

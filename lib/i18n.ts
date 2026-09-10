@@ -122,6 +122,9 @@ export const i18n = {
         week2Fri: "Week 2 Fri",
         week3Wed: "Week 3 Wed",
         week4Fri: "Week 4 Fri",
+        osakaHonmachi: "Osaka Honmachi",
+        kyoto: "Kyoto",
+        osakaUmeda: "Osaka Umeda",
       },
     },
     footer: {
@@ -305,6 +308,9 @@ export const i18n = {
         week2Fri: "第2週 金曜",
         week3Wed: "第3週 水曜",
         week4Fri: "第4週 金曜",
+        osakaHonmachi: "大阪本町",
+        kyoto: "京都",
+        osakaUmeda: "大阪梅田",
       },
     },
     footer: {
