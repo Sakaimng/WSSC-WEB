@@ -4,7 +4,6 @@ import { getSiteUrl } from "@/lib/seo";
 const routes = [
   "/",
   "/about",
-  "/schedule",
   "/gallery",
   "/merch",
   "/tickets",
@@ -17,11 +16,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return routes.map((path) => ({
     url: path === "/" ? base : `${base}${path}`,
     lastModified: new Date(),
-    changeFrequency: path === "/schedule" ? "weekly" : "monthly",
+    changeFrequency: "monthly",
     priority:
       path === "/"
         ? 1
-        : path === "/schedule" || path === "/tickets" || path === "/merch"
+        : path === "/tickets" || path === "/merch"
           ? 0.9
           : 0.7,
   }));

@@ -18,8 +18,6 @@ export const i18n = {
       menuClose: "Close",
       mainLabel: "Main",
       mobileMainLabel: "Mobile main",
-      next: "Next",
-      nextShow: "Next show",
       toggleLabel: "Switch language",
       languageNames: {
         en: "English",
@@ -102,30 +100,6 @@ export const i18n = {
       popupBody: "Tax included. Available now.",
       popupCta: "View the cap",
       popupClose: "Close announcement",
-      tourPopupEyebrow: "Press / Tour 2026",
-      tourPopupTitle: "Tokyo, Osaka & Kyoto Tour",
-      tourPopupPrice: "Sep 2 – 16, 2026",
-      tourPopupBody:
-        "Five English stand-up shows at Moxy hotels in Tokyo, Osaka, and Kyoto.",
-      tourPopupCta: "Read the press release",
-    },
-    schedule: {
-      eyebrow: "Schedule",
-      title: "Upcoming shows",
-      introPrefix:
-        "Four shows a month, at most one per Monday–Sunday week. Calendar rows are Wed / Fri / Wed / Fri unless the first row has no Wednesday: then the first Wednesday is the Wednesday of the week after the week with the second row's Friday, Week 2 Friday stays that Friday, and if row 2 Wednesday would repeat that date we use the next row's Wednesday instead. Shows start at",
-      upcomingDates: "Upcoming dates",
-      ticketOptions: "Ticket options",
-      weekdays: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-      showLabels: {
-        week1Wed: "Week 1 Wed",
-        week2Fri: "Week 2 Fri",
-        week3Wed: "Week 3 Wed",
-        week4Fri: "Week 4 Fri",
-        osakaHonmachi: "Osaka Honmachi",
-        kyoto: "Kyoto",
-        osakaUmeda: "Osaka Umeda",
-      },
     },
     footer: {
       label: "Social and location",
@@ -204,8 +178,6 @@ export const i18n = {
       menuClose: "Close",
       mainLabel: "メインナビゲーション",
       mobileMainLabel: "モバイルメインナビゲーション",
-      next: "次回",
-      nextShow: "次回公演",
       toggleLabel: "言語を切り替える",
       languageNames: {
         en: "英語",
@@ -288,30 +260,6 @@ export const i18n = {
       popupBody: "税込。発売中。",
       popupCta: "キャップを見る",
       popupClose: "お知らせを閉じる",
-      tourPopupEyebrow: "プレス / ツアー 2026",
-      tourPopupTitle: "TOKYO, OSAKA & KYOTO TOUR",
-      tourPopupPrice: "2026年9月2日–16日",
-      tourPopupBody:
-        "東京・大阪・京都のモクシーホテル全5公演。英語スタンドアップコメディ。",
-      tourPopupCta: "プレスリリースを読む",
-    },
-    schedule: {
-      eyebrow: "スケジュール",
-      title: "今後の公演",
-      introPrefix:
-        "月4回、原則は月曜始まりの週に1回まで。第1行に水曜がない月は、第2行の金曜の週の次の週の水曜に第1公演を移し、第2公演は第2行の金曜のまま。第3行の水曜が第1公演と同じ日なら、次の行の水曜を第3公演にします。開演は",
-      upcomingDates: "今後の日程",
-      ticketOptions: "チケットオプション",
-      weekdays: ["日", "月", "火", "水", "木", "金", "土"],
-      showLabels: {
-        week1Wed: "第1週 水曜",
-        week2Fri: "第2週 金曜",
-        week3Wed: "第3週 水曜",
-        week4Fri: "第4週 金曜",
-        osakaHonmachi: "大阪本町",
-        kyoto: "京都",
-        osakaUmeda: "大阪梅田",
-      },
     },
     footer: {
       label: "SNSとアクセス",
@@ -391,12 +339,5 @@ export function formatShowDate(date: Date, language: Language) {
     weekday: "short",
     month: "short",
     day: "numeric",
-  }).format(date);
-}
-
-export function formatMonthTitle(date: Date, language: Language) {
-  return new Intl.DateTimeFormat(language === "jp" ? "ja-JP" : "en-US", {
-    month: "long",
-    year: "numeric",
   }).format(date);
 }

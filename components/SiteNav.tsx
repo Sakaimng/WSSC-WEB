@@ -14,10 +14,8 @@ import {
   GOOGLE_MAPS_URL,
   INSTAGRAM_URL,
 } from "@/lib/config";
-import { getUpcomingShows, SHOW_TIME } from "@/lib/show-schedule";
-import { formatShowDate } from "@/lib/i18n";
 import { usePathname } from "next/navigation";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 const links = [
   { href: "/", labelKey: "home" },
@@ -57,12 +55,8 @@ function isActiveRoute(pathname: string, href: string) {
 
 export function SiteNav() {
   const pathname = usePathname();
-  const { language, t } = useI18n();
+  const { t } = useI18n();
   const [menuOpen, setMenuOpen] = useState(false);
-  const nextShow = useMemo(() => getUpcomingShows(undefined, 1)[0], []);
-  const nextShowDate = nextShow
-    ? formatShowDate(new Date(nextShow.year, nextShow.month, nextShow.day), language)
-    : null;
   const menuRef = useRef<HTMLElement>(null);
   const mobilePillRef = useRef<HTMLDivElement>(null);
   const previousPathnameRef = useRef(pathname);
@@ -113,25 +107,13 @@ export function SiteNav() {
       .to(menu, { height: 0, autoAlpha: 0, y: 12, duration: 0.28 }, "-=0.08");
   }, [menuOpen]);
 
-  const scheduleLinkLabel = `${t.nav.next}: ${nextShowDate} · ${SHOW_TIME}`;
-  const scheduleLink = nextShow && nextShowDate && (
-    <Link
-      href="/schedule"
-      className="shrink-0 text-xs font-semibold text-white transition hover:text-white/80"
-    >
-      {scheduleLinkLabel}
-    </Link>
-  );
-
   const isHome = pathname === "/";
 
   return (
     <>
     <header className="site-nav-header fixed top-0 right-0 left-0 z-50 m-0 hidden w-full bg-black p-0 transition-colors duration-300 ease-out min-[1032px]:block">
       <div className="grid h-full w-full grid-cols-[1fr_auto_1fr] items-center px-[2vw]">
-        <div className="hidden min-w-0 items-center justify-start gap-3 min-[1032px]:flex">
-          {scheduleLink}
-        </div>
+        <div className="hidden min-w-0 items-center justify-start gap-3 min-[1032px]:flex" />
 
         <div
           className="site-nav-brand relative col-span-3 flex shrink-0 justify-center min-[1032px]:col-span-1"
@@ -199,19 +181,6 @@ export function SiteNav() {
             </Link>
           );
         })}
-        {nextShow && nextShowDate ? (
-          <Link
-            href="/schedule"
-            className="mobile-menu-item block rounded-lg px-3 py-3 text-sm font-medium text-neutral-300 transition hover:bg-white/10 hover:text-white"
-          >
-            <span className="block text-xs text-neutral-500">
-              {t.nav.nextShow}
-            </span>
-            <span className="mt-1 block text-white">
-              {nextShowDate} · {SHOW_TIME}
-            </span>
-          </Link>
-        ) : null}
         <div className="mobile-menu-item py-2">
           <LanguageToggle />
         </div>

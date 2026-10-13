@@ -296,10 +296,6 @@ html.lenis body {
     flex: 1 1 0%;
     overflow: hidden;
   }
-
-  .schedule-page.page-viewport {
-    overflow: visible;
-  }
 }
 
 .page-viewport--scroll {
